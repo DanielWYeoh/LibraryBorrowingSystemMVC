@@ -1,6 +1,6 @@
-package com.masjohncook.library.view;
+package com.fad.LibrarySystem.view;
 
-import com.masjohncook.library.model.BorrowRecord;
+import com.fad.LibrarySystem.model.BorrowRecord;
 import java.util.List;
 
 public class BorrowView {

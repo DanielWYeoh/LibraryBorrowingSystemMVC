@@ -1,4 +1,4 @@
-package com.masjohncook.library.model;
+package com.fad.LibrarySystem.model;
 
 public class BorrowRecord {
 

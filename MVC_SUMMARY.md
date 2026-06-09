@@ -48,7 +48,7 @@ MVC separates the code into three clear responsibilities:
 ```
 src/
   com/
-    masjohncook/
+    fad/
       library/
         model/          ← all data classes (unchanged logic)
         view/           ← all display code (new)
@@ -58,7 +58,7 @@ src/
 
 ---
 
-### Step 1 — Model Layer (`com.masjohncook.library.model`)
+### Step 1 — Model Layer (`com.fad.LibrarySystem.model`)
 
 **What we did:** Moved all existing classes into the model package. No logic was changed — only the package declaration was updated.
 
@@ -102,7 +102,7 @@ public boolean borrowItem(LibraryItem item) {
 
 ---
 
-### Step 2 — View Layer (`com.masjohncook.library.view`)
+### Step 2 — View Layer (`com.fad.LibrarySystem.view`)
 
 **What we did:** Created 5 new View classes. Each one only contains `System.out.println()` calls. No Scanner, no logic.
 
@@ -134,7 +134,7 @@ public void showAllBooks(List<Books> books) {
 
 ---
 
-### Step 3 — Controller Layer (`com.masjohncook.library.controller`)
+### Step 3 — Controller Layer (`com.fad.LibrarySystem.controller`)
 
 **What we did:** Created 4 Controller classes. Each Controller owns the menu loop for one feature area.
 
@@ -189,9 +189,9 @@ Before (500+ lines of menus, logic, and input all mixed together):
 
 After (5 lines):
 ```java
-package com.masjohncook.library;
+package com.fad.LibrarySystem;
 
-import com.masjohncook.library.controller.LibraryController;
+import com.fad.LibrarySystem.controller.LibraryController;
 
 public class Main {
     public static void main(String[] args) {
@@ -229,11 +229,11 @@ Java convention: package names use **reverse domain name** in lowercase.
 
 | Before | After |
 |---|---|
-| `library.model` | `com.masjohncook.library.model` |
-| `library.view` | `com.masjohncook.library.view` |
-| `library.controller` | `com.masjohncook.library.controller` |
+| `library.model` | `com.fad.LibrarySystem.model` |
+| `library.view` | `com.fad.LibrarySystem.view` |
+| `library.controller` | `com.fad.LibrarySystem.controller` |
 
-**Why reverse domain?** It guarantees uniqueness. If two developers both name their package `library.model`, they conflict. `com.masjohncook.library.model` is unique to this developer.
+**Why reverse domain?** It guarantees uniqueness. If two developers both name their package `library.model`, they conflict. `com.fad.LibrarySystem.model` is unique to this developer.
 
 ### .gitignore
 
@@ -279,4 +279,4 @@ out/          ← compiled .class files (javac output)
 2. If you want to change the borrow limit from 3 to 5, which file do you open?
 3. Can `BookView.java` create a `new Books(...)` object? Why or why not?
 4. Why do we use one shared Scanner instead of one per Controller?
-5. Why does the package start with `com.masjohncook` instead of just `library`?
+5. Why does the package start with `com.fad` instead of just `library`?

@@ -1,6 +1,6 @@
-package com.masjohncook.library.view;
+package com.fad.LibrarySystem.view;
 
-import com.masjohncook.library.model.Fine;
+import com.fad.LibrarySystem.model.Fine;
 import java.util.List;
 
 public class FineView {

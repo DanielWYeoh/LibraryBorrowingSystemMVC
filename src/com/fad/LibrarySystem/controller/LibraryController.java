@@ -1,7 +1,7 @@
-package com.masjohncook.library.controller;
+package com.fad.LibrarySystem.controller;
 
-import com.masjohncook.library.model.Librarian;
-import com.masjohncook.library.view.MenuView;
+import com.fad.LibrarySystem.model.Librarian;
+import com.fad.LibrarySystem.view.MenuView;
 import java.util.Scanner;
 
 public class LibraryController {

@@ -1,6 +1,6 @@
-package com.masjohncook.library.view;
+package com.fad.LibrarySystem.view;
 
-import com.masjohncook.library.model.Member;
+import com.fad.LibrarySystem.model.Member;
 import java.util.List;
 
 public class MemberView {

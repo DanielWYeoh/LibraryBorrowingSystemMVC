@@ -1,6 +1,6 @@
-package com.masjohncook.library;
+package com.fad.LibrarySystem;
 
-import com.masjohncook.library.controller.LibraryController;
+import com.fad.LibrarySystem.controller.LibraryController;
 
 public class Main {
     public static void main(String[] args) {

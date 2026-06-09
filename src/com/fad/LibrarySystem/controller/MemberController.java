@@ -1,8 +1,8 @@
-package com.masjohncook.library.controller;
+package com.fad.LibrarySystem.controller;
 
-import com.masjohncook.library.model.Member;
-import com.masjohncook.library.model.Librarian;
-import com.masjohncook.library.view.MemberView;
+import com.fad.LibrarySystem.model.Member;
+import com.fad.LibrarySystem.model.Librarian;
+import com.fad.LibrarySystem.view.MemberView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;

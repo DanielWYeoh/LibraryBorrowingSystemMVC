@@ -1,10 +1,10 @@
-package com.masjohncook.library.controller;
+package com.fad.LibrarySystem.controller;
 
-import com.masjohncook.library.model.BorrowRecord;
-import com.masjohncook.library.model.LibraryItem;
-import com.masjohncook.library.model.Librarian;
-import com.masjohncook.library.model.Member;
-import com.masjohncook.library.view.BorrowView;
+import com.fad.LibrarySystem.model.BorrowRecord;
+import com.fad.LibrarySystem.model.LibraryItem;
+import com.fad.LibrarySystem.model.Librarian;
+import com.fad.LibrarySystem.model.Member;
+import com.fad.LibrarySystem.view.BorrowView;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
