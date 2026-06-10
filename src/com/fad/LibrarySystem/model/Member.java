@@ -77,6 +77,11 @@ public class Member extends Person {
     @Override
     public String toString() { return getInfo(); }
 
+    // Used only during DB loading to restore borrowed state without availability check
+    void addBorrowedItem(LibraryItem item) {
+        if (borrowCount < borrowedItems.length) borrowedItems[borrowCount++] = item;
+    }
+
     public String getMemberId()             { return id; }
     public LibraryItem[] getBorrowedItems() { return borrowedItems; }
     public int getBorrowCount()             { return borrowCount; }
