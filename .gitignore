@@ -1,11 +1,37 @@
-# macOS metadata files
-._*
-.DS_Store
+# ── Compiled output ──────────────────────────────────────────
+out/
+target/
+build/
+dist/
+*.class
+*.jar
+*.war
+*.ear
 
-# IntelliJ / PyCharm
+# ── macOS metadata ────────────────────────────────────────────
+.DS_Store
+._*
+**/.DS_Store
+**/._*
+
+# ── IDE — IntelliJ IDEA / PyCharm ────────────────────────────
 .idea/
 *.iml
-out/
+*.iws
+*.ipr
 
-# Compiled Java classes
-*.class
+# ── IDE — VS Code ─────────────────────────────────────────────
+.vscode/
+
+# ── IDE — Eclipse ─────────────────────────────────────────────
+.classpath
+.project
+.settings/
+bin/
+
+# ── IDE — NetBeans ────────────────────────────────────────────
+nbproject/
+nbbuild/
+
+# ── Logs ──────────────────────────────────────────────────────
+*.log
