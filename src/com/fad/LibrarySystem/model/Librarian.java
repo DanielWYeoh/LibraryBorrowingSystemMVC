@@ -227,32 +227,20 @@ public class Librarian extends Person {
 
     // ── Search by Genre / Type (method overloading) ───────────────────────────
 
-    public void searchByGenre(Books[] catalog, int size, String genre) {
-        System.out.println("Search results for genre: " + genre);
-        boolean found = false;
-        for (int i = 0; i < size; i++) {
-            if (catalog[i] != null && catalog[i].getGenre().equalsIgnoreCase(genre)) {
-                System.out.println("- " + catalog[i].getTitle()
-                        + " | Author: " + catalog[i].getAuthor()
-                        + " | Available: " + catalog[i].isAvailable());
-                found = true;
-            }
-        }
-        if (!found) System.out.println("No items found for: " + genre);
+    public List<Books> searchByGenre(Books[] catalog, int size, String genre) {
+        List<Books> results = new java.util.ArrayList<>();
+        for (int i = 0; i < size; i++)
+            if (catalog[i] != null && catalog[i].getGenre().equalsIgnoreCase(genre))
+                results.add(catalog[i]);
+        return results;
     }
 
-    public void searchByGenre(Multimedia[] catalog, int size, String type) {
-        System.out.println("Search results for type: " + type);
-        boolean found = false;
-        for (int i = 0; i < size; i++) {
-            if (catalog[i] != null && catalog[i].getType().equalsIgnoreCase(type)) {
-                System.out.println("- " + catalog[i].getTitle()
-                        + " | Type: " + catalog[i].getType()
-                        + " | Available: " + catalog[i].isAvailable());
-                found = true;
-            }
-        }
-        if (!found) System.out.println("No items found for: " + type);
+    public List<Multimedia> searchByGenre(Multimedia[] catalog, int size, String type) {
+        List<Multimedia> results = new java.util.ArrayList<>();
+        for (int i = 0; i < size; i++)
+            if (catalog[i] != null && catalog[i].getType().equalsIgnoreCase(type))
+                results.add(catalog[i]);
+        return results;
     }
 
     // ── Info ──────────────────────────────────────────────────────────────────
