@@ -26,10 +26,11 @@ public class Reservation {
                 + " | Status: " + (active ? "Active" : "Cancelled");
     }
 
-    public String      getReservationId() { return reservationId; }
-    public Member      getMember()        { return member; }
-    public LibraryItem getItem()          { return item; }
-    public boolean     isActive()         { return active; }
+    public String      getReservationId()   { return reservationId; }
+    public Member      getMember()          { return member; }
+    public LibraryItem getItem()            { return item; }
+    public String      getReservationDate() { return reservationDate; }
+    public boolean     isActive()           { return active; }
 
     public String toString() { return getInfo(); }
 }

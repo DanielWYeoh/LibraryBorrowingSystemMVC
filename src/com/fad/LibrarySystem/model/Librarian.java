@@ -1,18 +1,21 @@
 package com.fad.LibrarySystem.model;
 
+import com.fad.LibrarySystem.database.DatabaseManager;
+import java.time.LocalDate;
+import java.util.List;
+
 public class Librarian extends Person {
 
-    private Books[]       catalog;
-    private int           catalogCount;
-    private Multimedia[]  multimedia;
-    private int           multimediaCount;
-    private Member[]      members;
-    private int           memberCount;
+    private Books[]        catalog;
+    private int            catalogCount;
+    private Multimedia[]   multimedia;
+    private int            multimediaCount;
+    private Member[]       members;
+    private int            memberCount;
     private BorrowRecord[] borrowRecords;
-    private int           recordCount;
-    private Reservation[] reservations;
-    private int           reservationCount;
-    private int           fineCount;
+    private int            recordCount;
+    private Reservation[]  reservations;
+    private int            reservationCount;
 
     private static final int MAX_BOOKS        = 100;
     private static final int MAX_MULTIMEDIA   = 50;
@@ -22,33 +25,60 @@ public class Librarian extends Person {
 
     public Librarian(String librarianId, String name) {
         super(librarianId, name);
-        this.catalog          = new Books[MAX_BOOKS];
-        this.catalogCount     = 0;
-        this.multimedia       = new Multimedia[MAX_MULTIMEDIA];
-        this.multimediaCount  = 0;
-        this.members          = new Member[MAX_MEMBERS];
-        this.memberCount      = 0;
-        this.borrowRecords    = new BorrowRecord[MAX_RECORDS];
-        this.recordCount      = 0;
-        this.reservations     = new Reservation[MAX_RESERVATIONS];
-        this.reservationCount = 0;
-        this.fineCount        = 0;
-        loadInitialData();
+        catalog       = new Books[MAX_BOOKS];
+        multimedia    = new Multimedia[MAX_MULTIMEDIA];
+        members       = new Member[MAX_MEMBERS];
+        borrowRecords = new BorrowRecord[MAX_RECORDS];
+        reservations  = new Reservation[MAX_RESERVATIONS];
+        DatabaseManager.initSchema();
+        loadFromDatabase();
     }
 
-    private void loadInitialData() {
-        for (Books b : Books.getInitialBooks())           catalog[catalogCount++]      = b;
-        for (Multimedia m : Multimedia.getInitialMultimedia()) multimedia[multimediaCount++] = m;
-        for (Member m : Member.getInitialMembers())       members[memberCount++]       = m;
+    // ── Startup: load from DB, seed if empty ─────────────────────────────────
+
+    private void loadFromDatabase() {
+        if (DatabaseManager.isTableEmpty("books")) seedInitialData();
+
+        for (Books b : DatabaseManager.loadBooks())           catalog[catalogCount++]     = b;
+        for (Multimedia m : DatabaseManager.loadMultimedia()) multimedia[multimediaCount++] = m;
+        for (Member m : DatabaseManager.loadMembers()) {
+            members[memberCount++] = m;
+            for (String itemId : DatabaseManager.loadBorrowedItemIds(m.getMemberId())) {
+                LibraryItem item = findItemById(itemId);
+                if (item != null) m.addBorrowedItem(item);
+            }
+        }
+
+        recordCount      = DatabaseManager.getBorrowRecordCount();
+        reservationCount = DatabaseManager.getReservationCount();
+
+        List<String[]> rows = DatabaseManager.loadBorrowRecordRows();
+        int idx = 0;
+        for (String[] row : rows) {
+            Member      m    = findMemberById(row[1]);
+            LibraryItem item = findItemById(row[2]);
+            if (m == null || item == null) { idx++; continue; }
+            BorrowRecord r = new BorrowRecord(row[0], m, item, row[3]);
+            r.setReturnDate(row[4]);
+            r.setReturned(row[5].equals("1"));
+            borrowRecords[idx++] = r;
+        }
+    }
+
+    private void seedInitialData() {
+        for (Books b : Books.getInitialBooks())                DatabaseManager.insertBook(b);
+        for (Multimedia m : Multimedia.getInitialMultimedia()) DatabaseManager.insertMultimedia(m);
+        for (Member m : Member.getInitialMembers())            DatabaseManager.insertMember(m);
     }
 
     // ── Books ─────────────────────────────────────────────────────────────────
 
     public Books addBook(String bookId, String title, String author, String genre) {
-        if (catalogCount >= MAX_BOOKS)         return null;
-        if (findBookById(bookId) != null)      return null;
+        if (catalogCount >= MAX_BOOKS)    return null;
+        if (findBookById(bookId) != null) return null;
         Books book = new Books(bookId, title, author, genre);
         catalog[catalogCount++] = book;
+        DatabaseManager.insertBook(book);
         return book;
     }
 
@@ -62,6 +92,7 @@ public class Librarian extends Person {
                 if (!catalog[i].isAvailable()) return false;
                 for (int j = i; j < catalogCount - 1; j++) catalog[j] = catalog[j + 1];
                 catalog[--catalogCount] = null;
+                DatabaseManager.deleteBook(bookId);
                 return true;
             }
         }
@@ -74,6 +105,7 @@ public class Librarian extends Person {
         if (!newTitle.trim().isEmpty())  book.setTitle(newTitle.trim());
         if (!newAuthor.trim().isEmpty()) book.setAuthor(newAuthor.trim());
         if (!newGenre.trim().isEmpty())  book.setGenre(newGenre.trim());
+        DatabaseManager.updateBook(book);
         return true;
     }
 
@@ -86,10 +118,11 @@ public class Librarian extends Person {
     // ── Multimedia ────────────────────────────────────────────────────────────
 
     public Multimedia addMultimedia(String itemId, String title, String type, String duration) {
-        if (multimediaCount >= MAX_MULTIMEDIA)    return null;
-        if (findMultimediaById(itemId) != null)   return null;
+        if (multimediaCount >= MAX_MULTIMEDIA)  return null;
+        if (findMultimediaById(itemId) != null) return null;
         Multimedia item = new Multimedia(itemId, title, type, duration);
         multimedia[multimediaCount++] = item;
+        DatabaseManager.insertMultimedia(item);
         return item;
     }
 
@@ -106,10 +139,11 @@ public class Librarian extends Person {
     // ── Members ───────────────────────────────────────────────────────────────
 
     public Member registerMember(String memberId, String name) {
-        if (memberCount >= MAX_MEMBERS)          return null;
-        if (findMemberById(memberId) != null)    return null;
+        if (memberCount >= MAX_MEMBERS)       return null;
+        if (findMemberById(memberId) != null) return null;
         Member member = new Member(memberId, name);
         members[memberCount++] = member;
+        DatabaseManager.insertMember(member);
         return member;
     }
 
@@ -119,6 +153,7 @@ public class Librarian extends Person {
                 if (members[i].getBorrowCount() > 0) return false;
                 for (int j = i; j < memberCount - 1; j++) members[j] = members[j + 1];
                 members[--memberCount] = null;
+                DatabaseManager.deleteMember(memberId);
                 return true;
             }
         }
@@ -141,8 +176,8 @@ public class Librarian extends Person {
 
     public LibraryItem[] getAllItems() {
         LibraryItem[] all = new LibraryItem[catalogCount + multimediaCount];
-        for (int i = 0; i < catalogCount; i++)     all[i]                = catalog[i];
-        for (int i = 0; i < multimediaCount; i++)  all[catalogCount + i] = multimedia[i];
+        for (int i = 0; i < catalogCount; i++)    all[i]                = catalog[i];
+        for (int i = 0; i < multimediaCount; i++) all[catalogCount + i] = multimedia[i];
         return all;
     }
 
@@ -152,18 +187,27 @@ public class Librarian extends Person {
 
     public void recordBorrow(Member member, LibraryItem item) {
         if (recordCount >= MAX_RECORDS) return;
+        String today    = LocalDate.now().toString();
         String recordId = "REC" + String.format("%03d", recordCount + 1);
-        borrowRecords[recordCount++] = new BorrowRecord(recordId, member, item, "2026-04-29");
+        BorrowRecord record = new BorrowRecord(recordId, member, item, today);
+        borrowRecords[recordCount++] = record;
+        DatabaseManager.insertBorrowRecord(record);
+        DatabaseManager.insertMemberBorrowedItem(member.getMemberId(), item.getItemId());
+        DatabaseManager.updateItemAvailability(item.getItemId(), false);
     }
 
     public void recordReturn(Member member, LibraryItem item) {
+        String today = LocalDate.now().toString();
         for (int i = 0; i < recordCount; i++) {
             BorrowRecord r = borrowRecords[i];
             if (!r.isReturned()
                     && r.getMember().getMemberId().equals(member.getMemberId())
                     && r.getItem().getItemId().equals(item.getItemId())) {
-                r.setReturnDate("2026-04-29");
+                r.setReturnDate(today);
                 r.setReturned(true);
+                DatabaseManager.markBorrowRecordReturned(member.getMemberId(), item.getItemId(), today);
+                DatabaseManager.deleteMemberBorrowedItem(member.getMemberId(), item.getItemId());
+                DatabaseManager.updateItemAvailability(item.getItemId(), true);
                 return;
             }
         }
@@ -174,54 +218,43 @@ public class Librarian extends Person {
     public Reservation addReservation(Member member, LibraryItem item) {
         if (reservationCount >= MAX_RESERVATIONS) return null;
         String resId   = "RES" + String.format("%03d", reservationCount + 1);
-        String resDate = "Day-" + (reservationCount + 1);
+        String resDate = LocalDate.now().toString();
         Reservation res = new Reservation(resId, member, item, resDate);
         reservations[reservationCount++] = res;
+        DatabaseManager.insertReservation(resId, member.getMemberId(), item.getItemId(), resDate);
         return res;
     }
 
-    // ── Feature 4: Search by Genre / Type (method overloading) ───────────────
+    // ── Search by Genre / Type (method overloading) ───────────────────────────
 
-    public void searchByGenre(Books[] catalog, int size, String genre) {
-        System.out.println("Search results for genre: " + genre);
-        boolean found = false;
-        for (int i = 0; i < size; i++) {
-            if (catalog[i] != null && catalog[i].getGenre().equalsIgnoreCase(genre)) {
-                System.out.println("- " + catalog[i].getTitle()
-                        + " | Author: " + catalog[i].getAuthor()
-                        + " | Available: " + catalog[i].isAvailable());
-                found = true;
-            }
-        }
-        if (!found) System.out.println("No items found for: " + genre);
+    public List<Books> searchByGenre(Books[] catalog, int size, String genre) {
+        List<Books> results = new java.util.ArrayList<>();
+        for (int i = 0; i < size; i++)
+            if (catalog[i] != null && catalog[i].getGenre().equalsIgnoreCase(genre))
+                results.add(catalog[i]);
+        return results;
     }
 
-    public void searchByGenre(Multimedia[] catalog, int size, String type) {
-        System.out.println("Search results for type: " + type);
-        boolean found = false;
-        for (int i = 0; i < size; i++) {
-            if (catalog[i] != null && catalog[i].getType().equalsIgnoreCase(type)) {
-                System.out.println("- " + catalog[i].getTitle()
-                        + " | Type: " + catalog[i].getType()
-                        + " | Available: " + catalog[i].isAvailable());
-                found = true;
-            }
-        }
-        if (!found) System.out.println("No items found for: " + type);
+    public List<Multimedia> searchByGenre(Multimedia[] catalog, int size, String type) {
+        List<Multimedia> results = new java.util.ArrayList<>();
+        for (int i = 0; i < size; i++)
+            if (catalog[i] != null && catalog[i].getType().equalsIgnoreCase(type))
+                results.add(catalog[i]);
+        return results;
     }
 
     // ── Info ──────────────────────────────────────────────────────────────────
 
     @Override
-    public String getInfo()    { return "Librarian[" + id + "] " + name; }
-    public String toString()   { return getInfo(); }
+    public String getInfo()  { return "Librarian[" + id + "] " + name; }
+    public String toString() { return getInfo(); }
 
     // ── Getters ───────────────────────────────────────────────────────────────
 
     public String          getLibrarianId()      { return id; }
     public Books[]         getCatalog()          { return catalog; }
     public int             getCatalogCount()     { return catalogCount; }
-    public int             getCatalogSize()      { return catalogCount; }   // alias for guide
+    public int             getCatalogSize()      { return catalogCount; }
     public Multimedia[]    getMultimedia()       { return multimedia; }
     public int             getMultimediaCount()  { return multimediaCount; }
     public Member[]        getMembers()          { return members; }

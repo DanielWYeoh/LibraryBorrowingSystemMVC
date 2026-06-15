@@ -44,29 +44,21 @@ public class Member extends Person {
         return false;
     }
 
-    public void searchItem(LibraryItem[] catalog, int catalogSize, String keyword) {
-        System.out.println("Search results for \"" + keyword + "\":");
-        boolean found = false;
-        for (int i = 0; i < catalogSize; i++) {
+    public java.util.List<LibraryItem> searchItem(LibraryItem[] catalog, int catalogSize, String keyword) {
+        java.util.List<LibraryItem> results = new java.util.ArrayList<>();
+        for (int i = 0; i < catalogSize; i++)
             if (catalog[i] != null
-                    && catalog[i].getTitle().toLowerCase().contains(keyword.toLowerCase())) {
-                System.out.println("  -> " + catalog[i]);
-                found = true;
-            }
-        }
-        if (!found) System.out.println("  No items found matching \"" + keyword + "\".");
+                    && catalog[i].getTitle().toLowerCase().contains(keyword.toLowerCase()))
+                results.add(catalog[i]);
+        return results;
     }
 
-    public void searchItem(LibraryItem[] catalog, int catalogSize) {
-        System.out.println("Available items:");
-        boolean found = false;
-        for (int i = 0; i < catalogSize; i++) {
-            if (catalog[i] != null && catalog[i].isAvailable()) {
-                System.out.println("  -> " + catalog[i]);
-                found = true;
-            }
-        }
-        if (!found) System.out.println("  No items currently available.");
+    public java.util.List<LibraryItem> searchItem(LibraryItem[] catalog, int catalogSize) {
+        java.util.List<LibraryItem> results = new java.util.ArrayList<>();
+        for (int i = 0; i < catalogSize; i++)
+            if (catalog[i] != null && catalog[i].isAvailable())
+                results.add(catalog[i]);
+        return results;
     }
 
     @Override
@@ -76,6 +68,11 @@ public class Member extends Person {
 
     @Override
     public String toString() { return getInfo(); }
+
+    // Used only during DB loading to restore borrowed state without availability check
+    void addBorrowedItem(LibraryItem item) {
+        if (borrowCount < borrowedItems.length) borrowedItems[borrowCount++] = item;
+    }
 
     public String getMemberId()             { return id; }
     public LibraryItem[] getBorrowedItems() { return borrowedItems; }

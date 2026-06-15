@@ -60,6 +60,8 @@ public class BookController {
     private void searchByGenre() {
         System.out.print("Enter genre: ");
         String genre = scanner.nextLine();
-        librarian.searchByGenre(librarian.getCatalog(), librarian.getCatalogSize(), genre); // Model
+        List<Books> results = librarian.searchByGenre(                        // Model
+                librarian.getCatalog(), librarian.getCatalogSize(), genre);
+        bookView.showGenreResults(results, genre);                            // View
     }
 }
