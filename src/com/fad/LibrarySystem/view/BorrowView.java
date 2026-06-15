@@ -40,6 +40,10 @@ public class BorrowView {
         System.out.println("Not found: " + message);
     }
 
+    public void showError(String message) {
+        System.out.println("[ERROR] " + message);
+    }
+
     public void showBorrowMenu() {
         System.out.println("\n--- Borrow / Return Menu ---");
         System.out.println("1. Borrow Item");

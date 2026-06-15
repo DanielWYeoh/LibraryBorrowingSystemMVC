@@ -28,6 +28,10 @@ public class MemberView {
         System.out.println("Member not found.");
     }
 
+    public void showError(String message) {
+        System.out.println("[ERROR] " + message);
+    }
+
     public void showMemberMenu() {
         System.out.println("\n--- Member Menu ---");
         System.out.println("1. Register Member");

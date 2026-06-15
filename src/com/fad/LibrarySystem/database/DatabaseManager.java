@@ -136,20 +136,22 @@ public class DatabaseManager {
     }
 
     public static void updateItemAvailability(String itemId, boolean available) {
+        int val = available ? 1 : 0;
         try {
-            PreparedStatement ps = getConnection().prepareStatement(
-                    "UPDATE books SET available=? WHERE book_id=?");
-            ps.setInt(1, available ? 1 : 0);
-            ps.setString(2, itemId);
-            int rows = ps.executeUpdate();
-            ps.close();
-            if (rows == 0) {
-                ps = getConnection().prepareStatement(
-                        "UPDATE multimedia SET available=? WHERE item_id=?");
-                ps.setInt(1, available ? 1 : 0);
+            int rows;
+            try (PreparedStatement ps = getConnection().prepareStatement(
+                    "UPDATE books SET available=? WHERE book_id=?")) {
+                ps.setInt(1, val);
                 ps.setString(2, itemId);
-                ps.executeUpdate();
-                ps.close();
+                rows = ps.executeUpdate();
+            }
+            if (rows == 0) {
+                try (PreparedStatement ps = getConnection().prepareStatement(
+                        "UPDATE multimedia SET available=? WHERE item_id=?")) {
+                    ps.setInt(1, val);
+                    ps.setString(2, itemId);
+                    ps.executeUpdate();
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException("updateItemAvailability failed: " + e.getMessage(), e);
@@ -268,10 +270,11 @@ public class DatabaseManager {
         String sql = "SELECT item_id FROM member_borrowed_items WHERE member_id=?";
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setString(1, memberId);
-            ResultSet rs = ps.executeQuery();
-            List<String> ids = new ArrayList<>();
-            while (rs.next()) ids.add(rs.getString("item_id"));
-            return ids.toArray(new String[0]);
+            try (ResultSet rs = ps.executeQuery()) {
+                List<String> ids = new ArrayList<>();
+                while (rs.next()) ids.add(rs.getString("item_id"));
+                return ids.toArray(new String[0]);
+            }
         } catch (SQLException e) {
             throw new RuntimeException("loadBorrowedItemIds failed: " + e.getMessage(), e);
         }

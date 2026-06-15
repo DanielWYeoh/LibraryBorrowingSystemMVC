@@ -51,6 +51,10 @@ public class BookView {
                     + " | Available: " + m.isAvailable());
     }
 
+    public void showError(String message) {
+        System.out.println("[ERROR] " + message);
+    }
+
     public void showBookMenu() {
         System.out.println("\n--- Book Menu ---");
         System.out.println("1. Add Book");

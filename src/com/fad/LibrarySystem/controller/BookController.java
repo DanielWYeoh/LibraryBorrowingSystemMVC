@@ -26,6 +26,7 @@ public class BookController {
             try {
                 choice = Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
+                bookView.showError("Please enter a valid number.");
                 continue;
             }
             switch (choice) {
@@ -33,20 +34,28 @@ public class BookController {
                 case 2  -> viewAllBooks();
                 case 3  -> searchByGenre();
                 case 0  -> { return; }
-                default -> System.out.println("Invalid option.");
+                default -> bookView.showError("Invalid option. Please try again.");
             }
         }
     }
 
     private void addBook() {
-        System.out.print("Book ID : "); String id     = scanner.nextLine();
-        System.out.print("Title   : "); String title  = scanner.nextLine();
-        System.out.print("Author  : "); String author = scanner.nextLine();
-        System.out.print("Genre   : "); String genre  = scanner.nextLine();
+        System.out.print("Book ID : "); String id     = scanner.nextLine().trim();
+        System.out.print("Title   : "); String title  = scanner.nextLine().trim();
+        System.out.print("Author  : "); String author = scanner.nextLine().trim();
+        System.out.print("Genre   : "); String genre  = scanner.nextLine().trim();
 
-        Books book = librarian.addBook(id, title, author, genre);   // Model
-        if (book != null) bookView.showBookAdded(title);            // View
-        else System.out.println("Failed to add book (duplicate ID or catalog full).");
+        if (id.isEmpty() || title.isEmpty() || author.isEmpty()) {
+            bookView.showError("Book ID, Title, and Author cannot be empty.");
+            return;
+        }
+        try {
+            Books book = librarian.addBook(id, title, author, genre.isEmpty() ? "General" : genre);
+            if (book != null) bookView.showBookAdded(title);
+            else bookView.showError("Failed to add book (duplicate ID or catalog full).");
+        } catch (RuntimeException e) {
+            bookView.showError("Could not save book: " + e.getMessage());
+        }
     }
 
     private void viewAllBooks() {

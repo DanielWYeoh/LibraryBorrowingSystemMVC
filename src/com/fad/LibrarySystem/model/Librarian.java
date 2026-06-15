@@ -57,7 +57,7 @@ public class Librarian extends Person {
         for (String[] row : rows) {
             Member      m    = findMemberById(row[1]);
             LibraryItem item = findItemById(row[2]);
-            if (m == null || item == null) { idx++; continue; }
+            if (m == null || item == null) { recordCount--; continue; }
             BorrowRecord r = new BorrowRecord(row[0], m, item, row[3]);
             r.setReturnDate(row[4]);
             r.setReturned(row[5].equals("1"));

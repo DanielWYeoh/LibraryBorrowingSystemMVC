@@ -28,6 +28,7 @@ public class BorrowController {
             try {
                 choice = Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
+                borrowView.showError("Please enter a valid number.");
                 continue;
             }
             switch (choice) {
@@ -35,52 +36,80 @@ public class BorrowController {
                 case 2  -> returnItem();
                 case 3  -> viewAllRecords();
                 case 0  -> { return; }
-                default -> System.out.println("Invalid option.");
+                default -> borrowView.showError("Invalid option. Please try again.");
             }
         }
     }
 
     private void borrowItem() {
-        System.out.print("Member ID : "); String memberId = scanner.nextLine();
-        System.out.print("Item ID   : "); String itemId   = scanner.nextLine();
+        System.out.print("Member ID : "); String memberId = scanner.nextLine().trim();
+        System.out.print("Item ID   : "); String itemId   = scanner.nextLine().trim();
 
-        Member     member = librarian.findMemberById(memberId);
-        LibraryItem item  = librarian.findItemById(itemId);
+        if (memberId.isEmpty() || itemId.isEmpty()) {
+            borrowView.showError("Member ID and Item ID cannot be empty.");
+            return;
+        }
+
+        Member      member = librarian.findMemberById(memberId);
+        LibraryItem item   = librarian.findItemById(itemId);
 
         if (member == null) {
-            borrowView.showNotFound("Member " + memberId);          // View
+            borrowView.showNotFound("Member " + memberId);
             return;
         }
-        if (item == null || !item.isAvailable()) {
-            borrowView.showItemNotAvailable(itemId);                // View
+        if (item == null) {
+            borrowView.showNotFound("Item " + itemId);
+            return;
+        }
+        if (!item.isAvailable()) {
+            borrowView.showItemNotAvailable(item.getTitle());
             return;
         }
 
-        boolean success = member.borrowItem(item);                  // Model
+        boolean success = member.borrowItem(item);
         if (success) {
-            librarian.recordBorrow(member, item);                   // Model
-            borrowView.showBorrowSuccess(member.getName(), item.getTitle()); // View
+            try {
+                librarian.recordBorrow(member, item);
+                borrowView.showBorrowSuccess(member.getName(), item.getTitle());
+            } catch (RuntimeException e) {
+                member.returnItem(item);
+                borrowView.showError("Failed to record borrow: " + e.getMessage());
+            }
         } else {
-            borrowView.showBorrowLimitReached();                    // View
+            borrowView.showBorrowLimitReached();
         }
     }
 
     private void returnItem() {
-        System.out.print("Member ID : "); String memberId = scanner.nextLine();
-        System.out.print("Item ID   : "); String itemId   = scanner.nextLine();
+        System.out.print("Member ID : "); String memberId = scanner.nextLine().trim();
+        System.out.print("Item ID   : "); String itemId   = scanner.nextLine().trim();
 
-        Member     member = librarian.findMemberById(memberId);
-        LibraryItem item  = librarian.findItemById(itemId);
-
-        if (member == null || item == null) {
-            borrowView.showNotFound("Member or item not found.");   // View
+        if (memberId.isEmpty() || itemId.isEmpty()) {
+            borrowView.showError("Member ID and Item ID cannot be empty.");
             return;
         }
 
-        boolean success = member.returnItem(item);                  // Model
+        Member      member = librarian.findMemberById(memberId);
+        LibraryItem item   = librarian.findItemById(itemId);
+
+        if (member == null) {
+            borrowView.showNotFound("Member " + memberId);
+            return;
+        }
+        if (item == null) {
+            borrowView.showNotFound("Item " + itemId);
+            return;
+        }
+
+        boolean success = member.returnItem(item);
         if (success) {
-            librarian.recordReturn(member, item);                   // Model
-            borrowView.showReturnSuccess(member.getName(), item.getTitle()); // View
+            try {
+                librarian.recordReturn(member, item);
+                borrowView.showReturnSuccess(member.getName(), item.getTitle());
+            } catch (RuntimeException e) {
+                member.borrowItem(item);
+                borrowView.showError("Failed to record return: " + e.getMessage());
+            }
         } else {
             borrowView.showNotFound("Item not in member's borrowed list.");
         }
