@@ -228,6 +228,8 @@ After clicking OK you will see this state:
 5. AnchorPane will fill the canvas and appear in the **Document → Hierarchy** tab (bottom-left)
 6. The **Controller class** field in the **Document → Controller** tab is now **enabled** (no longer grayed out)
 
+> **Warning — common mistake:** Dragging *any* component to the drop zone (such as `Canvas`, `VBox`, or `HBox`) will also enable the Controller field — but if it is not AnchorPane, adding AnchorPane afterward will fail because a root already exists. If this happens, go to **File → New**, choose **Empty**, and start this step again. AnchorPane must be the very first item you drop onto the empty "Drag Library items here..." area.
+
 ### Step 8 — Set the controller class
 
 Now that AnchorPane is placed, you can type the controller name:
@@ -396,6 +398,8 @@ SceneBuilder can generate a Java skeleton with all the `@FXML` annotations alrea
 2. **Drag AnchorPane** and **drop it onto the dotted "Drag Library items here..." area** in the center canvas
 3. AnchorPane becomes the root — the **Controller class** field is now enabled
 
+> **Warning:** AnchorPane must be the first and only item you drop onto the empty area. Dropping any other component first (Canvas, VBox, etc.) also enables the Controller field but then prevents AnchorPane from being added. If that happens, go to **File → New → Empty** and redo this step.
+
 ### Step 21 — Set the controller class
 
 1. **Bottom-left Document panel** → click the **Controller** sub-tab
@@ -464,7 +468,7 @@ Column 2 — Name:
 4. **Properties** tab → **Pref Width** → type: `120`
 5. **Code** tab → **fx:id** → type: `colBorrowCount` → press `Enter`
 
-### Step 22 — Export skeleton and save
+### Step 23 — Export skeleton and save
 
 1. Top menu → **View** → **Show Sample Controller Skeleton** → click **Copy to Clipboard** → close popup
 2. Top menu → **File** → **Save As...**
@@ -475,19 +479,21 @@ Column 2 — Name:
 
 ## PART 5 — SceneBuilder: Design `BorrowTab.fxml`
 
-### Step 23 — Create a new empty document
+### Step 24 — Create a new empty document
 
 1. Top menu → **File → New**
 2. In the template dialog, select **Empty** → click **OK**
 3. The canvas shows the dotted **"Drag Library items here..."** area and the Controller class field is grayed out
 
-### Step 24 — Add the root AnchorPane first (unlocks the Controller field)
+### Step 25 — Add the root AnchorPane first (unlocks the Controller field)
 
 1. **Library** panel → **Containers** → find **AnchorPane**
 2. **Drag AnchorPane** and **drop it onto the dotted "Drag Library items here..." area** in the center canvas
 3. The **Controller class** field is now enabled
 
-### Step 25 — Set the controller class
+> **Warning:** AnchorPane must be the first item dropped onto the empty area. Dropping anything else first (Canvas, VBox, etc.) also enables the Controller field but prevents AnchorPane from being added. If that happens, go to **File → New → Empty** and redo this step.
+
+### Step 26 — Set the controller class
 
 1. **Bottom-left Document panel** → **Controller** sub-tab
 2. Click inside the **Controller class** field and type exactly:
@@ -496,9 +502,9 @@ Column 2 — Name:
    ```
 3. Press `Enter`
 
-### Step 26 — Build the layout
+### Step 27 — Build the layout
 
-**AnchorPane is already placed as the root from Step 24.**
+**AnchorPane is already placed as the root from Step 25.**
 
 **Add VBox inside AnchorPane:**
 1. **Library** panel → **Containers** → **VBox** → drag onto **AnchorPane**
@@ -593,7 +599,7 @@ Column 6 — Status:
 2. **Properties** → **Text** → `Status` | **Pref Width** → `80`
 3. **Code** → **fx:id** → `colReturnStatus` → press `Enter`
 
-### Step 26 — Export skeleton and save
+### Step 28 — Export skeleton and save
 
 1. Top menu → **View** → **Show Sample Controller Skeleton** → click **Copy to Clipboard** → close popup
 2. Top menu → **File** → **Save As...**
@@ -604,13 +610,13 @@ Column 6 — Status:
 
 ## PART 6 — SceneBuilder: Design `FineTab.fxml`
 
-### Step 27 — Create a new empty document
+### Step 29 — Create a new empty document
 
 1. Top menu → **File → New**
 2. In the template dialog, select **Empty** → click **OK**
 3. The canvas shows the dotted **"Drag Library items here..."** area and the Controller class field is grayed out
 
-### Step 28 — Add the root VBox (this tab uses VBox as the root, not AnchorPane)
+### Step 30 — Add the root VBox (this tab uses VBox as the root, not AnchorPane)
 
 This tab is simpler — the root is a VBox directly, with no AnchorPane wrapper needed.
 
@@ -622,7 +628,7 @@ This tab is simpler — the root is a VBox directly, with no AnchorPane wrapper 
    - **Pref Width** field → type: `980`
    - **Pref Height** field → type: `600`
 
-### Step 29 — Set the controller class
+### Step 31 — Set the controller class
 
 1. **Bottom-left Document panel** → **Controller** sub-tab
 2. Click inside the **Controller class** field and type exactly:
@@ -631,9 +637,9 @@ This tab is simpler — the root is a VBox directly, with no AnchorPane wrapper 
    ```
 3. Press `Enter`
 
-### Step 30 — Build the layout
+### Step 32 — Build the layout
 
-**VBox is already placed as the root from Step 28.**
+**VBox is already placed as the root from Step 30.**
 
 **Add TableView inside VBox:**
 1. **Library** panel → **Controls** → **TableView** → drag onto **VBox**
@@ -672,7 +678,7 @@ Column 5 — Amount (Rp):
 2. **Properties** → **Text** → `Amount (Rp)` | **Pref Width** → `120`
 3. **Code** → **fx:id** → `colAmount` → press `Enter`
 
-### Step 30 — Export skeleton and save
+### Step 33 — Export skeleton and save
 
 1. Top menu → **View** → **Show Sample Controller Skeleton** → click **Copy to Clipboard** → close popup
 2. Top menu → **File** → **Save As...**
@@ -687,7 +693,7 @@ For each controller, create a new Java file in `src/com/fad/LibrarySystem/contro
 
 > The `@FXML` field names must exactly match the `fx:id` values you set in SceneBuilder.
 
-### Step 31 — Create `BookFXController.java`
+### Step 34 — Create `BookFXController.java`
 
 ```java
 package com.fad.LibrarySystem.controller;
@@ -801,7 +807,7 @@ public class BookFXController {
 }
 ```
 
-### Step 32 — Create `MemberFXController.java`
+### Step 35 — Create `MemberFXController.java`
 
 ```java
 package com.fad.LibrarySystem.controller;
@@ -887,7 +893,7 @@ public class MemberFXController {
 }
 ```
 
-### Step 33 — Create `BorrowFXController.java`
+### Step 36 — Create `BorrowFXController.java`
 
 ```java
 package com.fad.LibrarySystem.controller;
@@ -1005,7 +1011,7 @@ public class BorrowFXController {
 }
 ```
 
-### Step 34 — Create `FineFXController.java`
+### Step 37 — Create `FineFXController.java`
 
 ```java
 package com.fad.LibrarySystem.controller;
@@ -1053,7 +1059,7 @@ public class FineFXController {
 
 ## PART 8 — Create `App.java` (JavaFX Entry Point)
 
-### Step 35 — Create `App.java`
+### Step 38 — Create `App.java`
 
 Create `src/com/fad/LibrarySystem/App.java`:
 
@@ -1118,7 +1124,7 @@ public class App extends Application {
 
 ## PART 9 — Run the Application
 
-### Step 36 — Run via Maven
+### Step 39 — Run via Maven
 
 **Option A — Terminal** (fastest):
 
@@ -1143,7 +1149,7 @@ mvn javafx:run
 3. Click the **▶ Run** button that appears directly above the `main` method
 4. If it fails with "JavaFX runtime components are missing", use Option A instead — the Maven plugin handles the module path automatically
 
-### Step 37 — Verify each tab works
+### Step 40 — Verify each tab works
 
 | Tab | What to test |
 |---|---|
