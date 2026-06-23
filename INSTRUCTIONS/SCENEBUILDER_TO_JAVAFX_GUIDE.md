@@ -3,6 +3,19 @@
 
 ---
 
+## VS Code Setup — Recommended Extensions
+
+Install these from the Extensions panel (`Ctrl+Shift+X`) before starting:
+
+| Extension | Publisher | Why |
+|---|---|---|
+| Extension Pack for Java | Microsoft | Java language support, Maven panel, run/debug |
+| Maven for Java | Microsoft | Included in the pack — gives you the Maven sidebar |
+
+After installing, VS Code will show a **Maven** icon in the left sidebar (looks like `M`). You will use this to run the app.
+
+---
+
 ## Overview
 
 This guide walks you through migrating the existing console-based Library Borrowing System into a JavaFX GUI application using SceneBuilder. The model layer (`LibraryService`, `DatabaseManager`, all model classes) stays completely unchanged.
@@ -94,8 +107,15 @@ Inside `<build>`, after `<sourceDirectory>src</sourceDirectory>`, add:
 
 ### Step 4 — Reload Maven
 
-In IntelliJ: click the **Maven** panel → **Reload All Maven Projects** (or press `Ctrl+Shift+O`).  
-Confirm `javafx-controls` and `javafx-fxml` appear under **External Libraries**.
+In the **VS Code terminal** (`Ctrl+` `` ` ``):
+
+```bash
+mvn dependency:resolve
+```
+
+You should see `BUILD SUCCESS` and lines mentioning `javafx-controls` and `javafx-fxml`.
+
+Alternatively, open the **Maven** sidebar panel → click the **Refresh** icon (↻) at the top of the panel. The dependencies will appear under **Dependencies** in the tree.
 
 ---
 
@@ -103,7 +123,18 @@ Confirm `javafx-controls` and `javafx-fxml` appear under **External Libraries**.
 
 ### Step 5 — Create the FXML directory
 
-Create this folder structure manually (right-click in IntelliJ → New Directory):
+In the VS Code **terminal**, run this single command from the project root:
+
+```bash
+mkdir -p src/resources/com/fad/LibrarySystem/view
+```
+
+Or do it via the Explorer panel:
+1. Click the **Explorer** icon in the left sidebar (`Ctrl+Shift+E`)
+2. Right-click the `src` folder → **New Folder**
+3. Type `resources/com/fad/LibrarySystem/view` (VS Code creates nested folders automatically)
+
+The result should look like:
 
 ```
 src/
@@ -114,7 +145,7 @@ src/
           view/          ← your .fxml files go here
 ```
 
-In IntelliJ, right-click the `resources` folder → **Mark Directory As** → **Resources Root**.
+> **Note:** VS Code does not have an "Mark as Resources Root" concept. Maven uses the `<resources>` block you added in Step 3 to tell the compiler where to look — that is all that is needed.
 
 ---
 
@@ -700,16 +731,25 @@ public class App extends Application {
 
 ### Step 24 — Run via Maven
 
-In the terminal at the project root:
+**Option A — Terminal** (fastest):
+
+Open the VS Code terminal (`Ctrl+` `` ` ``) and run:
 
 ```bash
 mvn javafx:run
 ```
 
-Or in IntelliJ:
-1. Open **Maven** panel on the right
-2. **Plugins → javafx → javafx:run**
-3. Double-click `javafx:run`
+**Option B — Maven sidebar**:
+
+1. Click the **Maven** icon in the left sidebar
+2. Expand your project → **Plugins** → **javafx**
+3. Click the ▶ button next to `javafx:run`
+
+**Option C — VS Code run button** (requires Extension Pack for Java):
+
+1. Open `App.java`
+2. Click the **▶ Run** button that appears above the `main` method
+3. If it fails with "JavaFX runtime components are missing", use Option A instead — the Maven plugin handles the module path automatically
 
 ### Step 25 — Verify each tab works
 
