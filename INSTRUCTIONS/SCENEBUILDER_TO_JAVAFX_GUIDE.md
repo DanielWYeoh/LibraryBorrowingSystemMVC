@@ -216,6 +216,8 @@ Select any component on the canvas, then use these tabs:
 After clicking OK you will see this state:
 - The center canvas shows a dotted rectangle with the text **"Drag Library items here..."**
 - The **Document → Controller** section (bottom-left) is visible but the **Controller class** field is **grayed out and cannot be typed into yet**
+![image](https://hackmd.io/_uploads/ryq6az_MGg.png)
+
 
 > **Important:** The Controller class field is disabled until a root element exists on the canvas. You must place AnchorPane first — that unlocks the field.
 
@@ -225,8 +227,11 @@ After clicking OK you will see this state:
 2. Find the **Containers** category — click the triangle next to it to expand if it is collapsed
 3. Find **AnchorPane** in the list
 4. **Drag AnchorPane** from the Library panel and **drop it directly onto the dotted "Drag Library items here..." area** in the center canvas
-5. AnchorPane will fill the canvas and appear in the **Document → Hierarchy** tab (bottom-left)
-6. The **Controller class** field in the **Document → Controller** tab is now **enabled** (no longer grayed out)
+
+![image](https://hackmd.io/_uploads/HkAWCMOGMx.png)
+
+6. AnchorPane will fill the canvas and appear in the **Document → Hierarchy** tab (bottom-left)
+7. The **Controller class** field in the **Document → Controller** tab is now **enabled** (no longer grayed out)
 
 > **Warning — common mistake:** Dragging *any* component to the drop zone (such as `Canvas`, `VBox`, or `HBox`) will also enable the Controller field — but if it is not AnchorPane, adding AnchorPane afterward will fail because a root already exists. If this happens, go to **File → New**, choose **Empty**, and start this step again. AnchorPane must be the very first item you drop onto the empty "Drag Library items here..." area.
 
@@ -235,45 +240,77 @@ After clicking OK you will see this state:
 Now that AnchorPane is placed, you can type the controller name:
 
 1. Look at the **bottom-left Document panel** — click the **Controller** sub-tab
+
+![image](https://hackmd.io/_uploads/S1GvxXOzGg.png)
+
 2. Click inside the **Controller class** field (it is now active)
+
+![image](https://hackmd.io/_uploads/B1Mtgmdzfg.png)
+
 3. Type exactly:
    ```
    com.fad.LibrarySystem.controller.BookFXController
    ```
+![image](https://hackmd.io/_uploads/rkkpeXuGMe.png)
+
+
 4. Press `Enter` to confirm
 
 ### Step 9 — Add a VBox inside the AnchorPane
 
 1. In the **Library** section, under **Containers**, find **VBox**
 2. **Drag** VBox and **drop it onto the AnchorPane** on the canvas (drop it inside the AnchorPane border)
-3. The hierarchy should now show: `AnchorPane → VBox`
-4. Click the **VBox** to select it (it will be highlighted)
-5. In the **right panel**, click the **Layout** tab
-6. Scroll down to find the **AnchorPane Constraints** section — you will see four fields: Top, Right, Bottom, Left
-7. Set all four fields to `0` — this makes the VBox fill the entire AnchorPane:
+
+![image](https://hackmd.io/_uploads/ByPEWQ_zzl.png)
+
+
+4. The hierarchy should now show: `AnchorPane → VBox`
+
+![image](https://hackmd.io/_uploads/HJnUW7_Mzx.png)
+
+
+6. Click the **VBox** to select it (it will be highlighted)
+7. In the **right panel**, click the **Layout** tab
+8. Scroll down to find the **AnchorPane Constraints** section — you will see four fields: Top, Right, Bottom, Left
+9. Set all four fields to `0` — this makes the VBox fill the entire AnchorPane:
    - **Top:** `0`
    - **Right:** `0`
    - **Bottom:** `0`
    - **Left:** `0`
 
+![image](https://hackmd.io/_uploads/SJ6zGXOGzl.png)
+
+
 ### Step 10 — Add a toolbar HBox inside the VBox
 
 1. In the **Library** section, under **Containers**, find **HBox**
 2. **Drag** HBox and **drop it onto the VBox** on the canvas (or drag it onto `VBox` in the Hierarchy panel)
-3. Click the **HBox** to select it
-4. In the **right panel**, click the **Properties** tab:
-   - Find the **Spacing** field and type `10`
+
+![image](https://hackmd.io/_uploads/ByASfmuGzg.png)
+
+4. Click the **HBox** to select it
 5. In the **right panel**, click the **Layout** tab:
+   - Find the **Spacing** field and type `10`
    - Find the **Padding** section — set all four sides (Top, Right, Bottom, Left) to `10`
+
+![image](https://hackmd.io/_uploads/r14DNQOzGl.png)
+
 
 ### Step 11 — Add a TextField inside the HBox
 
 1. In the **Library** section, under **Controls**, find **TextField**
 2. **Drag** TextField and **drop it onto the HBox** (either onto the HBox in the canvas or onto `HBox` in the Hierarchy)
-3. Click the **TextField** to select it
-4. In the **right panel**, click the **Properties** tab:
+
+![image](https://hackmd.io/_uploads/ByPnNXuMMe.png)
+
+
+4. Click the **TextField** to select it
+5. In the **right panel**, click the **Properties** tab:
    - Find the **Prompt Text** field and type: `Search by genre...`
-5. In the **right panel**, click the **Code** tab:
+
+![image](https://hackmd.io/_uploads/Bk2MSQ_zfg.png)
+
+
    - Find the **fx:id** field and type: `genreSearchField`
    - Press `Enter` to confirm
 
@@ -282,9 +319,12 @@ Now that AnchorPane is placed, you can type the controller name:
 1. In the **Library** section, under **Controls**, find **Button**
 2. **Drag** Button and **drop it onto the HBox** (to the right of the TextField)
 3. Click the **Button** to select it
-4. In the **right panel**, click the **Properties** tab:
+
+![image](https://hackmd.io/_uploads/BkQoB7_Gzx.png)
+
+5. In the **right panel**, click the **Properties** tab:
    - Find the **Text** field and type: `Search`
-5. In the **right panel**, click the **Code** tab:
+6. In the **right panel**, click the **Code** tab:
    - Find the **On Action** field and type: `#handleSearch`
    - Press `Enter` to confirm
 
@@ -315,13 +355,19 @@ Add **Delete Book** button:
 
 1. In the **Library** section, under **Controls**, find **TableView**
 2. **Drag** TableView and **drop it onto the VBox** — place it below the HBox (you can see the position in the Hierarchy panel: it should appear after `HBox` as a sibling, both inside `VBox`)
-3. Click the **TableView** to select it
-4. In the **right panel**, click the **Code** tab:
+
+![image](https://hackmd.io/_uploads/Hyi3LmOGGl.png)
+
+4. Click the **TableView** to select it
+5. In the **right panel**, click the **Code** tab:
    - Find the **fx:id** field and type: `bookTable`
    - Press `Enter` to confirm
-5. In the **right panel**, click the **Layout** tab:
+6. In the **right panel**, click the **Layout** tab:
    - Find the **VBox Constraints** section
    - Find the **Vgrow** dropdown and select **ALWAYS** — this makes the table expand to fill remaining space
+
+![image](https://hackmd.io/_uploads/HyDMvXOzze.png)
+
 
 ### Step 16 — Configure the TableView columns
 
@@ -369,9 +415,13 @@ SceneBuilder can generate a Java skeleton with all the `@FXML` annotations alrea
 1. In the SceneBuilder **top menu bar**, click **View**
 2. In the View dropdown menu, click **Show Sample Controller Skeleton**
 3. A popup window appears showing auto-generated Java code — it lists every `@FXML` field and every empty handler method, matching all the `fx:id` values and `onAction` values you just set
-4. Click the **Copy to Clipboard** button in that popup
-5. Close the popup
-6. Keep this code — you will paste it into `BookFXController.java` in Part 7
+
+
+![image](https://hackmd.io/_uploads/SyJ7FQufGl.png)
+
+5. Click the **Copy to Clipboard** button in that popup
+6. Close the popup
+7. Keep this code — you will paste it into `BookFXController.java` in Part 7
 
 ### Step 18 — Save the FXML file
 
@@ -806,6 +856,9 @@ public class BookFXController {
     }
 }
 ```
+
+![image](https://hackmd.io/_uploads/B1HoCQufze.png)
+
 
 ### Step 35 — Create `MemberFXController.java`
 
