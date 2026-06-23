@@ -1,5 +1,32 @@
+/**
+ * @author      masjohncook
+ * @version     0.0.1
+ * @copyright   (C) Copyright 2026
+ * @license     None
+ * @maintainer  masjohncook
+ * @email       mas.john.cook@gmail.com
+ * @status      Development
+ */
 package com.fad.LibrarySystem.model;
 
+/**
+ * Represents a single physical book in the library collection.
+ * Inherits from LibraryItem — gains itemId, title, and available.
+ *
+ * A Book is a specific type of LibraryItem that adds two extra
+ * attributes: the author who wrote it and the genre it belongs to.
+ * It also provides the seed data loaded into the database at first startup.
+ *
+ * Inheritance:
+ *   Book extends LibraryItem
+ *   - Inherits : itemId, title, available (and their getters/setters)
+ *   - Adds     : author, genre
+ *   - Overrides: getInfo(), toString()
+ *
+ * Attributes:
+ *   - author : name of the book's author
+ *   - genre  : category of the book (e.g. "Fiction", "Classic", "Sci-Fi")
+ */
 public class Book extends LibraryItem {
 
     private String author;
@@ -11,6 +38,12 @@ public class Book extends LibraryItem {
         this.genre  = genre;
     }
 
+    /**
+     * Returns the full set of seed books inserted into the database on first startup.
+     * Uses INSERT OR IGNORE so re-running on an existing database is safe.
+     *
+     * @return array of Book objects covering a range of genres
+     */
     public static Book[] getInitialBooks() {
         return new Book[]{
             // ── Original ──────────────────────────────────────────────────────
@@ -67,61 +100,6 @@ public class Book extends LibraryItem {
             new Book("B048", "Do Androids Dream of Electric Sheep",     "Philip K. Dick",     "Sci-Fi"),
             new Book("B049", "Slaughterhouse-Five",                     "Kurt Vonnegut",      "Sci-Fi"),
             new Book("B050", "The Handmaid's Tale",                     "Margaret Atwood",    "Dystopian"),
-            // ── Mystery / Thriller ────────────────────────────────────────────
-            new Book("B051", "The Girl with the Dragon Tattoo", "Stieg Larsson",      "Mystery"),
-            new Book("B052", "Gone Girl",                        "Gillian Flynn",       "Thriller"),
-            new Book("B053", "And Then There Were None",         "Agatha Christie",     "Mystery"),
-            new Book("B054", "Murder on the Orient Express",     "Agatha Christie",     "Mystery"),
-            new Book("B055", "The Hound of the Baskervilles",    "Arthur Conan Doyle",  "Mystery"),
-            new Book("B056", "In Cold Blood",                    "Truman Capote",       "Thriller"),
-            new Book("B057", "The Da Vinci Code",                "Dan Brown",           "Thriller"),
-            new Book("B058", "Big Little Lies",                  "Liane Moriarty",      "Thriller"),
-            new Book("B059", "The Silence of the Lambs",         "Thomas Harris",       "Thriller"),
-            new Book("B060", "Sharp Objects",                    "Gillian Flynn",       "Mystery"),
-            new Book("B061", "The Girl on the Train",            "Paula Hawkins",       "Mystery"),
-            new Book("B062", "The Name of the Rose",             "Umberto Eco",         "Mystery"),
-            // ── Fantasy ───────────────────────────────────────────────────────
-            new Book("B063", "The Lord of the Rings",                  "J.R.R. Tolkien",    "Fantasy"),
-            new Book("B064", "The Hobbit",                             "J.R.R. Tolkien",    "Fantasy"),
-            new Book("B065", "Harry Potter and the Sorcerer's Stone",  "J.K. Rowling",      "Fantasy"),
-            new Book("B066", "A Game of Thrones",                      "George R.R. Martin","Fantasy"),
-            new Book("B067", "The Way of Kings",                       "Brandon Sanderson", "Fantasy"),
-            new Book("B068", "American Gods",                          "Neil Gaiman",       "Fantasy"),
-            new Book("B069", "Good Omens",                             "Terry Pratchett",   "Fantasy"),
-            new Book("B070", "The Name of the Wind",                   "Patrick Rothfuss",  "Fantasy"),
-            new Book("B071", "Mistborn",                               "Brandon Sanderson", "Fantasy"),
-            new Book("B072", "The Chronicles of Narnia",               "C.S. Lewis",        "Fantasy"),
-            // ── Biography ─────────────────────────────────────────────────────
-            new Book("B073", "Long Walk to Freedom",                   "Nelson Mandela",    "Biography"),
-            new Book("B074", "The Diary of a Young Girl",              "Anne Frank",        "Biography"),
-            new Book("B075", "Steve Jobs",                             "Walter Isaacson",   "Biography"),
-            new Book("B076", "Educated",                               "Tara Westover",     "Biography"),
-            new Book("B077", "The Story of My Experiments with Truth", "Mahatma Gandhi",    "Biography"),
-            new Book("B078", "Leonardo da Vinci",                      "Walter Isaacson",   "Biography"),
-            new Book("B079", "Becoming",                               "Michelle Obama",    "Biography"),
-            new Book("B080", "Born a Crime",                           "Trevor Noah",       "Biography"),
-            new Book("B081", "Open",                                   "Andre Agassi",      "Biography"),
-            new Book("B082", "I Am Malala",                            "Malala Yousafzai",  "Biography"),
-            // ── Non-Fiction ───────────────────────────────────────────────────
-            new Book("B083", "Sapiens",                                "Yuval Noah Harari", "History"),
-            new Book("B084", "Thinking Fast and Slow",                 "Daniel Kahneman",   "Psychology"),
-            new Book("B085", "The Power of Habit",                     "Charles Duhigg",    "Self-Help"),
-            new Book("B086", "Atomic Habits",                          "James Clear",       "Self-Help"),
-            new Book("B087", "Man's Search for Meaning",               "Viktor Frankl",     "Philosophy"),
-            new Book("B088", "Meditations",                            "Marcus Aurelius",   "Philosophy"),
-            new Book("B089", "The Art of War",                         "Sun Tzu",           "Philosophy"),
-            new Book("B090", "Outliers",                               "Malcolm Gladwell",  "Psychology"),
-            new Book("B091", "The 7 Habits of Highly Effective People","Stephen R. Covey",  "Self-Help"),
-            new Book("B092", "How to Win Friends and Influence People", "Dale Carnegie",     "Self-Help"),
-            // ── Romance ───────────────────────────────────────────────────────
-            new Book("B093", "Sense and Sensibility",   "Jane Austen",     "Romance"),
-            new Book("B094", "Emma",                     "Jane Austen",     "Romance"),
-            new Book("B095", "Persuasion",               "Jane Austen",     "Romance"),
-            new Book("B096", "Outlander",                "Diana Gabaldon",  "Romance"),
-            new Book("B097", "The Notebook",             "Nicholas Sparks", "Romance"),
-            new Book("B098", "Me Before You",            "Jojo Moyes",      "Romance"),
-            new Book("B099", "The Fault in Our Stars",   "John Green",      "Romance"),
-            new Book("B100", "Normal People",            "Sally Rooney",    "Romance"),
         };
     }
 

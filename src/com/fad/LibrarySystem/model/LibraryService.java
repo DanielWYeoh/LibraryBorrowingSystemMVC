@@ -1,3 +1,12 @@
+/**
+ * @author      masjohncook
+ * @version     0.0.1
+ * @copyright   (C) Copyright 2026
+ * @license     None
+ * @maintainer  masjohncook
+ * @email       mas.john.cook@gmail.com
+ * @status      Development
+ */
 package com.fad.LibrarySystem.model;
 
 import com.fad.LibrarySystem.database.DatabaseManager;
@@ -6,6 +15,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Central service layer that owns all in-memory data and coordinates
+ * every operation that reads or writes to the database.
+ *
+ * LibraryService is the single source of truth for the application's
+ * runtime state. It is created once in App.java and injected into
+ * every tab controller, so all tabs share the same live data.
+ *
+ * Responsibilities:
+ *   - Initialises the database schema on first run
+ *   - Seeds initial books, multimedia, and members if the DB is empty
+ *   - Loads all persisted data into memory on startup
+ *   - Provides CRUD operations for Books, Multimedia, Members,
+ *     BorrowRecords, Reservations, and Fines
+ *   - Delegates all SQL to {@link DatabaseManager}
+ *
+ * In-memory collections:
+ *   - catalog       : all Book objects
+ *   - multimedia    : all Multimedia objects
+ *   - members       : all Member objects
+ *   - borrowRecords : all BorrowRecord objects (active and returned)
+ *   - reservations  : all Reservation objects (active and cancelled)
+ *   - fines         : all Fine objects
+ */
 public class LibraryService {
 
     private final List<Book>         catalog       = new ArrayList<>();
@@ -71,6 +104,11 @@ public class LibraryService {
 
     // ── Books ─────────────────────────────────────────────────────────────────
 
+    /**
+     * Adds a new book to the catalog and persists it to the database.
+     *
+     * @return the new Book, or null if the ID already exists
+     */
     public Book addBook(String bookId, String title, String author, String genre) {
         if (findBookById(bookId) != null) return null;
         Book book = new Book(bookId, title, author, genre);
@@ -79,10 +117,16 @@ public class LibraryService {
         return book;
     }
 
+    /** Overload that defaults genre to "General". */
     public Book addBook(String bookId, String title, String author) {
         return addBook(bookId, title, author, "General");
     }
 
+    /**
+     * Removes a book from the catalog and deletes it from the database.
+     *
+     * @return false if the book is currently borrowed (cannot delete)
+     */
     public boolean removeBook(String bookId) {
         for (int i = 0; i < catalog.size(); i++) {
             if (catalog.get(i).getBookId().equals(bookId)) {
@@ -95,6 +139,11 @@ public class LibraryService {
         return false;
     }
 
+    /**
+     * Updates a book's fields. Empty strings are ignored (field unchanged).
+     *
+     * @return false if no book with the given ID exists
+     */
     public boolean updateBook(String bookId, String newTitle, String newAuthor, String newGenre) {
         Book book = findBookById(bookId);
         if (book == null) return false;
@@ -105,6 +154,7 @@ public class LibraryService {
         return true;
     }
 
+    /** @return the Book with the given ID, or null if not found */
     public Book findBookById(String bookId) {
         for (Book b : catalog)
             if (b.getBookId().equals(bookId)) return b;
@@ -113,6 +163,11 @@ public class LibraryService {
 
     // ── Multimedia ────────────────────────────────────────────────────────────
 
+    /**
+     * Adds a new multimedia item and persists it to the database.
+     *
+     * @return the new Multimedia, or null if the ID already exists
+     */
     public Multimedia addMultimedia(String itemId, String title, String type, String duration) {
         if (findMultimediaById(itemId) != null) return null;
         Multimedia item = new Multimedia(itemId, title, type, duration);
@@ -121,10 +176,12 @@ public class LibraryService {
         return item;
     }
 
+    /** Overload that defaults duration to "Unknown". */
     public Multimedia addMultimedia(String itemId, String title, String type) {
         return addMultimedia(itemId, title, type, "Unknown");
     }
 
+    /** @return the Multimedia item with the given ID, or null if not found */
     public Multimedia findMultimediaById(String itemId) {
         for (Multimedia m : multimedia)
             if (m.getItemId().equals(itemId)) return m;
@@ -133,6 +190,11 @@ public class LibraryService {
 
     // ── Members ───────────────────────────────────────────────────────────────
 
+    /**
+     * Registers a new member and persists them to the database.
+     *
+     * @return the new Member, or null if the ID already exists
+     */
     public Member registerMember(String memberId, String name) {
         if (findMemberById(memberId) != null) return null;
         Member member = new Member(memberId, name);
@@ -141,6 +203,11 @@ public class LibraryService {
         return member;
     }
 
+    /**
+     * Removes a member from the system and deletes them from the database.
+     *
+     * @return false if the member still has borrowed items
+     */
     public boolean removeMember(String memberId) {
         for (int i = 0; i < members.size(); i++) {
             if (members.get(i).getMemberId().equals(memberId)) {
@@ -153,6 +220,7 @@ public class LibraryService {
         return false;
     }
 
+    /** @return the Member with the given ID, or null if not found */
     public Member findMemberById(String memberId) {
         for (Member m : members)
             if (m.getMemberId().equals(memberId)) return m;
@@ -161,6 +229,11 @@ public class LibraryService {
 
     // ── Combined catalog lookup ───────────────────────────────────────────────
 
+    /**
+     * Looks up a LibraryItem by ID, searching both books and multimedia.
+     *
+     * @return the matching Book or Multimedia, or null if not found
+     */
     public LibraryItem findItemById(String itemId) {
         Book book = findBookById(itemId);
         if (book != null) return book;
@@ -169,6 +242,11 @@ public class LibraryService {
 
     // ── Borrow records ────────────────────────────────────────────────────────
 
+    /**
+     * Records a borrow transaction and persists it to the database.
+     * Updates the item's availability and the member's borrowed-items list.
+     * Generates a UUID-based record ID to avoid collisions across restarts.
+     */
     public void recordBorrow(Member member, LibraryItem item) {
         String recordId = "REC-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         String today    = LocalDate.now().toString();
@@ -179,6 +257,10 @@ public class LibraryService {
         DatabaseManager.updateItemAvailability(item.getItemId(), false);
     }
 
+    /**
+     * Records a return transaction and updates all related state in the database.
+     * Sets the return date, marks the record as returned, and restores the item's availability.
+     */
     public void recordReturn(Member member, LibraryItem item) {
         String today = LocalDate.now().toString();
         for (BorrowRecord r : borrowRecords) {
@@ -197,6 +279,11 @@ public class LibraryService {
 
     // ── Reservations ──────────────────────────────────────────────────────────
 
+    /**
+     * Creates a reservation for a member on a given item and persists it to the database.
+     *
+     * @return the new Reservation object
+     */
     public Reservation addReservation(Member member, LibraryItem item) {
         String resId   = "RES-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         String resDate = LocalDate.now().toString();
@@ -208,6 +295,12 @@ public class LibraryService {
 
     // ── Fines ─────────────────────────────────────────────────────────────────
 
+    /**
+     * Issues a fine to a member for a late return and persists it to the database.
+     *
+     * @param daysLate number of days past the due date
+     * @return the new Fine object
+     */
     public Fine recordFine(Member member, LibraryItem item, int daysLate) {
         String fineId = "FINE-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         Fine fine = new Fine(fineId, member, item, daysLate);
@@ -218,6 +311,12 @@ public class LibraryService {
 
     // ── Search ────────────────────────────────────────────────────────────────
 
+    /**
+     * Returns all books whose genre matches the given string (case-insensitive).
+     *
+     * @param genre the genre to filter by
+     * @return list of matching Book objects (empty if none found)
+     */
     public List<Book> searchByGenre(String genre) {
         List<Book> results = new ArrayList<>();
         for (Book b : catalog)
@@ -225,6 +324,12 @@ public class LibraryService {
         return results;
     }
 
+    /**
+     * Returns all multimedia items whose type matches the given string (case-insensitive).
+     *
+     * @param type the media type to filter by (e.g. "DVD", "CD")
+     * @return list of matching Multimedia objects (empty if none found)
+     */
     public List<Multimedia> searchByType(String type) {
         List<Multimedia> results = new ArrayList<>();
         for (Multimedia m : multimedia)

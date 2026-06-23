@@ -1,10 +1,34 @@
+/**
+ * @author      masjohncook
+ * @version     0.0.1
+ * @copyright   (C) Copyright 2026
+ * @license     None
+ * @maintainer  masjohncook
+ * @email       mas.john.cook@gmail.com
+ * @status      Development
+ */
 package com.fad.LibrarySystem.controller;
 
 import com.fad.LibrarySystem.model.LibraryService;
 import com.fad.LibrarySystem.view.MenuView;
 import java.util.Scanner;
 
-/** Console entry point — Books tab is now handled by App.java (JavaFX). */
+/**
+ * Top-level console controller — the entry point for the console application loop.
+ *
+ * LibraryController is created by Main.java and owns the main menu loop.
+ * It creates one LibraryService (the shared data/business layer) and the
+ * sub-controllers for Members and Borrow/Return, then delegates to them
+ * based on the user's menu choice.
+ *
+ * Note on Books (option 1):
+ *   The Books tab has been migrated to JavaFX (BookFXController + BookTab.fxml).
+ *   Selecting option 1 in the console now shows a redirect message pointing to
+ *   the GUI. Once all tabs are migrated, this class and Main.java will be retired.
+ *
+ * Used by: Main (console entry point)
+ * MVC role: Top-level Controller
+ */
 public class LibraryController {
 
     private final LibraryService   service;
@@ -21,6 +45,7 @@ public class LibraryController {
         this.borrowController = new BorrowController(service, scanner);
     }
 
+    /** Starts the main menu loop. Runs until the user selects 0 (Exit). */
     public void start() {
         int choice = -1;
         while (choice != 0) {
