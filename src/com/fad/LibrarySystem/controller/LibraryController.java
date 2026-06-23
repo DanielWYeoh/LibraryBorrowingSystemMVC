@@ -4,11 +4,11 @@ import com.fad.LibrarySystem.model.LibraryService;
 import com.fad.LibrarySystem.view.MenuView;
 import java.util.Scanner;
 
+/** Console entry point — Books tab is now handled by App.java (JavaFX). */
 public class LibraryController {
 
     private final LibraryService   service;
     private final MenuView         menuView;
-    private final BookController   bookController;
     private final MemberController memberController;
     private final BorrowController borrowController;
     private final Scanner          scanner;
@@ -17,7 +17,6 @@ public class LibraryController {
         this.service          = new LibraryService();
         this.menuView         = new MenuView();
         this.scanner          = new Scanner(System.in);
-        this.bookController   = new BookController(service, scanner);
         this.memberController = new MemberController(service, scanner);
         this.borrowController = new BorrowController(service, scanner);
     }
@@ -33,11 +32,11 @@ public class LibraryController {
                 continue;
             }
             switch (choice) {
-                case 1  -> bookController.handleMenu();
+                case 1  -> menuView.showMessage("Books — use the JavaFX GUI (run App.java).");
                 case 2  -> memberController.handleMenu();
                 case 3  -> borrowController.handleMenu();
-                case 4  -> menuView.showMessage("Reservations — coming in Meeting 2.");
-                case 5  -> menuView.showMessage("Fines — coming in Meeting 2.");
+                case 4  -> menuView.showMessage("Reservations — coming soon.");
+                case 5  -> menuView.showMessage("Fines — coming soon.");
                 case 0  -> menuView.showMessage("Goodbye!");
                 default -> menuView.showError("Invalid option. Try again.");
             }

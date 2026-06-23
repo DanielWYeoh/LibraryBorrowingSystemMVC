@@ -23,7 +23,7 @@ public class LibraryService {
     // ── Startup ───────────────────────────────────────────────────────────────
 
     private void loadFromDatabase() {
-        if (DatabaseManager.isTableEmpty("books")) seedInitialData();
+        seedInitialData(); // INSERT OR IGNORE — safe to run every startup; adds new entries without touching existing ones
 
         for (Book b : DatabaseManager.loadBooks())             catalog.add(b);
         for (Multimedia m : DatabaseManager.loadMultimedia())  multimedia.add(m);
