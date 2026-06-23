@@ -2,23 +2,22 @@ package com.fad.LibrarySystem.model;
 
 public class Fine {
 
-    private String recordId;
-    private Member member;
+    private String      fineId;
+    private Member      member;
     private LibraryItem item;
-    private int daysLate;
-    private int fineAmount;
+    private int         daysLate;
+    private int         fineAmount;
 
-    public Fine(String recordId, Member member, LibraryItem item, int daysLate) {
-        this.recordId   = recordId;
+    public Fine(String fineId, Member member, LibraryItem item, int daysLate) {
+        this.fineId     = fineId;
         this.member     = member;
         this.item       = item;
         this.daysLate   = daysLate;
-        this.fineAmount = calculateFine(daysLate);
+        this.fineAmount = daysLate * 2000;
     }
 
-    public int calculateFine(int daysLate) {
-        this.fineAmount = daysLate * 2000;
-        return this.fineAmount;
+    public static int calculateFine(int daysLate) {
+        return daysLate * 2000;
     }
 
     public String getInfo() {
@@ -28,10 +27,16 @@ public class Fine {
                 + "\nFine: Rp" + fineAmount;
     }
 
-    public int    getFineAmount() { return fineAmount; }
-    public Member getMember()     { return member; }
-    public String getRecordId()   { return recordId; }
-    public int    getDaysLate()   { return daysLate; }
+    public String      getFineId()     { return fineId; }
+    public int         getFineAmount() { return fineAmount; }
+    public Member      getMember()     { return member; }
+    public LibraryItem getItem()       { return item; }
+    public int         getDaysLate()   { return daysLate; }
 
+    /** @deprecated Use {@link #getFineId()} */
+    @Deprecated
+    public String getRecordId() { return fineId; }
+
+    @Override
     public String toString() { return getInfo(); }
 }

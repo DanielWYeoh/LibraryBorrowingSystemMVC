@@ -4,11 +4,16 @@ import com.fad.LibrarySystem.model.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class DatabaseManager {
 
     private static final String DB_URL = "jdbc:sqlite:library.db";
     private static Connection conn;
+
+    private static final Set<String> KNOWN_TABLES = Set.of(
+            "books", "multimedia", "members", "member_borrowed_items",
+            "borrow_records", "reservations", "fines");
 
     // ── Connection ────────────────────────────────────────────────────────────
 
@@ -81,12 +86,22 @@ public class DatabaseManager {
                         reservation_date TEXT NOT NULL,
                         active           INTEGER NOT NULL DEFAULT 1
                     )""");
+            s.execute("""
+                    CREATE TABLE IF NOT EXISTS fines (
+                        fine_id     TEXT PRIMARY KEY,
+                        member_id   TEXT NOT NULL,
+                        item_id     TEXT NOT NULL,
+                        days_late   INTEGER NOT NULL,
+                        fine_amount INTEGER NOT NULL
+                    )""");
         } catch (SQLException e) {
             throw new RuntimeException("Failed to initialize schema: " + e.getMessage(), e);
         }
     }
 
     public static boolean isTableEmpty(String table) {
+        if (!KNOWN_TABLES.contains(table))
+            throw new IllegalArgumentException("Unknown table: " + table);
         try (Statement s = getConnection().createStatement();
              ResultSet rs = s.executeQuery("SELECT COUNT(*) FROM " + table)) {
             return !rs.next() || rs.getInt(1) == 0;
@@ -97,7 +112,7 @@ public class DatabaseManager {
 
     // ── Books ─────────────────────────────────────────────────────────────────
 
-    public static void insertBook(Books book) {
+    public static void insertBook(Book book) {
         String sql = "INSERT OR IGNORE INTO books (book_id, title, author, genre, available) VALUES (?,?,?,?,?)";
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setString(1, book.getBookId());
@@ -121,7 +136,7 @@ public class DatabaseManager {
         }
     }
 
-    public static void updateBook(Books book) {
+    public static void updateBook(Book book) {
         String sql = "UPDATE books SET title=?, author=?, genre=?, available=? WHERE book_id=?";
         try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
             ps.setString(1, book.getTitle());
@@ -158,17 +173,17 @@ public class DatabaseManager {
         }
     }
 
-    public static Books[] loadBooks() {
+    public static Book[] loadBooks() {
         try (Statement s = getConnection().createStatement();
              ResultSet rs = s.executeQuery("SELECT * FROM books ORDER BY book_id")) {
-            List<Books> list = new ArrayList<>();
+            List<Book> list = new ArrayList<>();
             while (rs.next()) {
-                Books b = new Books(rs.getString("book_id"), rs.getString("title"),
+                Book b = new Book(rs.getString("book_id"), rs.getString("title"),
                         rs.getString("author"), rs.getString("genre"));
                 b.setAvailable(rs.getInt("available") == 1);
                 list.add(b);
             }
-            return list.toArray(new Books[0]);
+            return list.toArray(new Book[0]);
         } catch (SQLException e) {
             throw new RuntimeException("loadBooks failed: " + e.getMessage(), e);
         }
@@ -311,15 +326,6 @@ public class DatabaseManager {
         }
     }
 
-    public static int getBorrowRecordCount() {
-        try (Statement s = getConnection().createStatement();
-             ResultSet rs = s.executeQuery("SELECT COUNT(*) FROM borrow_records")) {
-            return rs.next() ? rs.getInt(1) : 0;
-        } catch (SQLException e) {
-            return 0;
-        }
-    }
-
     public static List<String[]> loadBorrowRecordRows() {
         try (Statement s = getConnection().createStatement();
              ResultSet rs = s.executeQuery("SELECT * FROM borrow_records ORDER BY record_id")) {
@@ -356,12 +362,56 @@ public class DatabaseManager {
         }
     }
 
-    public static int getReservationCount() {
+    public static List<String[]> loadReservationRows() {
         try (Statement s = getConnection().createStatement();
-             ResultSet rs = s.executeQuery("SELECT COUNT(*) FROM reservations")) {
-            return rs.next() ? rs.getInt(1) : 0;
+             ResultSet rs = s.executeQuery("SELECT * FROM reservations ORDER BY reservation_id")) {
+            List<String[]> rows = new ArrayList<>();
+            while (rs.next()) {
+                rows.add(new String[]{
+                        rs.getString("reservation_id"),
+                        rs.getString("member_id"),
+                        rs.getString("item_id"),
+                        rs.getString("reservation_date"),
+                        String.valueOf(rs.getInt("active"))
+                });
+            }
+            return rows;
         } catch (SQLException e) {
-            return 0;
+            throw new RuntimeException("loadReservationRows failed: " + e.getMessage(), e);
+        }
+    }
+
+    // ── Fines ─────────────────────────────────────────────────────────────────
+
+    public static void insertFine(Fine fine) {
+        String sql = "INSERT OR IGNORE INTO fines (fine_id, member_id, item_id, days_late, fine_amount) VALUES (?,?,?,?,?)";
+        try (PreparedStatement ps = getConnection().prepareStatement(sql)) {
+            ps.setString(1, fine.getFineId());
+            ps.setString(2, fine.getMember().getMemberId());
+            ps.setString(3, fine.getItem().getItemId());
+            ps.setInt(4, fine.getDaysLate());
+            ps.setInt(5, fine.getFineAmount());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("insertFine failed: " + e.getMessage(), e);
+        }
+    }
+
+    public static List<String[]> loadFineRows() {
+        try (Statement s = getConnection().createStatement();
+             ResultSet rs = s.executeQuery("SELECT * FROM fines ORDER BY fine_id")) {
+            List<String[]> rows = new ArrayList<>();
+            while (rs.next()) {
+                rows.add(new String[]{
+                        rs.getString("fine_id"),
+                        rs.getString("member_id"),
+                        rs.getString("item_id"),
+                        String.valueOf(rs.getInt("days_late"))
+                });
+            }
+            return rows;
+        } catch (SQLException e) {
+            throw new RuntimeException("loadFineRows failed: " + e.getMessage(), e);
         }
     }
 }

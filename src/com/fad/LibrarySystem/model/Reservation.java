@@ -32,5 +32,6 @@ public class Reservation {
     public String      getReservationDate() { return reservationDate; }
     public boolean     isActive()           { return active; }
 
+    @Override
     public String toString() { return getInfo(); }
 }

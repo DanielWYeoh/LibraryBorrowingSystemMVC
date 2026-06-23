@@ -25,5 +25,6 @@ public class LibraryItem {
     public void setTitle(String title)           { this.title     = title; }
     public void setAvailable(boolean available)  { this.available = available; }
 
+    @Override
     public String toString() { return getInfo(); }
 }

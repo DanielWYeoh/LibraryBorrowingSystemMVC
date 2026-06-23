@@ -1,25 +1,25 @@
 package com.fad.LibrarySystem.controller;
 
-import com.fad.LibrarySystem.model.Librarian;
+import com.fad.LibrarySystem.model.LibraryService;
 import com.fad.LibrarySystem.view.MenuView;
 import java.util.Scanner;
 
 public class LibraryController {
 
-    private Librarian         librarian;
-    private MenuView          menuView;
-    private BookController    bookController;
-    private MemberController  memberController;
-    private BorrowController  borrowController;
-    private Scanner           scanner;
+    private final LibraryService   service;
+    private final MenuView         menuView;
+    private final BookController   bookController;
+    private final MemberController memberController;
+    private final BorrowController borrowController;
+    private final Scanner          scanner;
 
     public LibraryController() {
-        this.librarian        = new Librarian("L001", "Admin Librarian");
+        this.service          = new LibraryService();
         this.menuView         = new MenuView();
         this.scanner          = new Scanner(System.in);
-        this.bookController   = new BookController(librarian, scanner);
-        this.memberController = new MemberController(librarian, scanner);
-        this.borrowController = new BorrowController(librarian, scanner);
+        this.bookController   = new BookController(service, scanner);
+        this.memberController = new MemberController(service, scanner);
+        this.borrowController = new BorrowController(service, scanner);
     }
 
     public void start() {

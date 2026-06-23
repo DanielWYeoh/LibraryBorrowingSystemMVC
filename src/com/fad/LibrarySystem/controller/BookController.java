@@ -1,22 +1,21 @@
 package com.fad.LibrarySystem.controller;
 
-import com.fad.LibrarySystem.model.Books;
-import com.fad.LibrarySystem.model.Librarian;
+import com.fad.LibrarySystem.model.Book;
+import com.fad.LibrarySystem.model.LibraryService;
 import com.fad.LibrarySystem.view.BookView;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class BookController {
 
-    private Librarian librarian;
-    private BookView  bookView;
-    private Scanner   scanner;
+    private final LibraryService service;
+    private final BookView       bookView;
+    private final Scanner        scanner;
 
-    public BookController(Librarian librarian, Scanner scanner) {
-        this.librarian = librarian;
-        this.bookView  = new BookView();
-        this.scanner   = scanner;
+    public BookController(LibraryService service, Scanner scanner) {
+        this.service  = service;
+        this.bookView = new BookView();
+        this.scanner  = scanner;
     }
 
     public void handleMenu() {
@@ -50,7 +49,7 @@ public class BookController {
             return;
         }
         try {
-            Books book = librarian.addBook(id, title, author, genre.isEmpty() ? "General" : genre);
+            Book book = service.addBook(id, title, author, genre.isEmpty() ? "General" : genre);
             if (book != null) bookView.showBookAdded(title);
             else bookView.showError("Failed to add book (duplicate ID or catalog full).");
         } catch (RuntimeException e) {
@@ -59,18 +58,13 @@ public class BookController {
     }
 
     private void viewAllBooks() {
-        List<Books> books = new ArrayList<>();
-        for (int i = 0; i < librarian.getCatalogSize(); i++) {
-            books.add(librarian.getCatalog()[i]);
-        }
-        bookView.showAllBooks(books);                               // View
+        bookView.showAllBooks(service.getCatalog());
     }
 
     private void searchByGenre() {
         System.out.print("Enter genre: ");
         String genre = scanner.nextLine();
-        List<Books> results = librarian.searchByGenre(                        // Model
-                librarian.getCatalog(), librarian.getCatalogSize(), genre);
-        bookView.showGenreResults(results, genre);                            // View
+        List<Book> results = service.searchByGenre(genre);
+        bookView.showGenreResults(results, genre);
     }
 }

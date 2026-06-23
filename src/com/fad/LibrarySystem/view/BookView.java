@@ -1,16 +1,16 @@
 package com.fad.LibrarySystem.view;
 
-import com.fad.LibrarySystem.model.Books;
+import com.fad.LibrarySystem.model.Book;
 import com.fad.LibrarySystem.model.Multimedia;
 import java.util.List;
 
 public class BookView {
 
-    public void showBook(Books book) {
+    public void showBook(Book book) {
         System.out.println(book.getInfo());
     }
 
-    public void showAllBooks(List<Books> books) {
+    public void showAllBooks(List<Book> books) {
         if (books.isEmpty()) {
             System.out.println("No books in catalog.");
             return;
@@ -29,13 +29,13 @@ public class BookView {
         System.out.println("Book not found.");
     }
 
-    public void showGenreResults(List<Books> results, String genre) {
+    public void showGenreResults(List<Book> results, String genre) {
         if (results.isEmpty()) {
             System.out.println("No books found for genre: " + genre);
             return;
         }
         System.out.println("Search results for genre: " + genre);
-        for (Books b : results)
+        for (Book b : results)
             System.out.println("  - " + b.getTitle() + " | Author: " + b.getAuthor()
                     + " | Available: " + b.isAvailable());
     }

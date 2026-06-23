@@ -40,5 +40,6 @@ public class BorrowRecord {
     public void setReturnDate(String returnDate) { this.returnDate = returnDate; }
     public void setReturned(boolean returned)    { this.returned   = returned; }
 
+    @Override
     public String toString() { return getInfo(); }
 }

@@ -1,22 +1,19 @@
 package com.fad.LibrarySystem.controller;
 
-import com.fad.LibrarySystem.model.BorrowRecord;
 import com.fad.LibrarySystem.model.LibraryItem;
-import com.fad.LibrarySystem.model.Librarian;
+import com.fad.LibrarySystem.model.LibraryService;
 import com.fad.LibrarySystem.model.Member;
 import com.fad.LibrarySystem.view.BorrowView;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class BorrowController {
 
-    private Librarian  librarian;
-    private BorrowView borrowView;
-    private Scanner    scanner;
+    private final LibraryService service;
+    private final BorrowView     borrowView;
+    private final Scanner        scanner;
 
-    public BorrowController(Librarian librarian, Scanner scanner) {
-        this.librarian  = librarian;
+    public BorrowController(LibraryService service, Scanner scanner) {
+        this.service    = service;
         this.borrowView = new BorrowView();
         this.scanner    = scanner;
     }
@@ -50,26 +47,17 @@ public class BorrowController {
             return;
         }
 
-        Member      member = librarian.findMemberById(memberId);
-        LibraryItem item   = librarian.findItemById(itemId);
+        Member      member = service.findMemberById(memberId);
+        LibraryItem item   = service.findItemById(itemId);
 
-        if (member == null) {
-            borrowView.showNotFound("Member " + memberId);
-            return;
-        }
-        if (item == null) {
-            borrowView.showNotFound("Item " + itemId);
-            return;
-        }
-        if (!item.isAvailable()) {
-            borrowView.showItemNotAvailable(item.getTitle());
-            return;
-        }
+        if (member == null) { borrowView.showNotFound("Member " + memberId); return; }
+        if (item == null)   { borrowView.showNotFound("Item " + itemId);     return; }
+        if (!item.isAvailable()) { borrowView.showItemNotAvailable(item.getTitle()); return; }
 
         boolean success = member.borrowItem(item);
         if (success) {
             try {
-                librarian.recordBorrow(member, item);
+                service.recordBorrow(member, item);
                 borrowView.showBorrowSuccess(member.getName(), item.getTitle());
             } catch (RuntimeException e) {
                 member.returnItem(item);
@@ -89,22 +77,16 @@ public class BorrowController {
             return;
         }
 
-        Member      member = librarian.findMemberById(memberId);
-        LibraryItem item   = librarian.findItemById(itemId);
+        Member      member = service.findMemberById(memberId);
+        LibraryItem item   = service.findItemById(itemId);
 
-        if (member == null) {
-            borrowView.showNotFound("Member " + memberId);
-            return;
-        }
-        if (item == null) {
-            borrowView.showNotFound("Item " + itemId);
-            return;
-        }
+        if (member == null) { borrowView.showNotFound("Member " + memberId); return; }
+        if (item == null)   { borrowView.showNotFound("Item " + itemId);     return; }
 
         boolean success = member.returnItem(item);
         if (success) {
             try {
-                librarian.recordReturn(member, item);
+                service.recordReturn(member, item);
                 borrowView.showReturnSuccess(member.getName(), item.getTitle());
             } catch (RuntimeException e) {
                 member.borrowItem(item);
@@ -116,10 +98,6 @@ public class BorrowController {
     }
 
     private void viewAllRecords() {
-        List<BorrowRecord> records = new ArrayList<>();
-        for (int i = 0; i < librarian.getRecordCount(); i++) {
-            records.add(librarian.getBorrowRecords()[i]);
-        }
-        borrowView.showAllRecords(records);                         // View
+        borrowView.showAllRecords(service.getBorrowRecords());
     }
 }

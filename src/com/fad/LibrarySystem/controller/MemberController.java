@@ -1,20 +1,18 @@
 package com.fad.LibrarySystem.controller;
 
+import com.fad.LibrarySystem.model.LibraryService;
 import com.fad.LibrarySystem.model.Member;
-import com.fad.LibrarySystem.model.Librarian;
 import com.fad.LibrarySystem.view.MemberView;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class MemberController {
 
-    private Librarian   librarian;
-    private MemberView  memberView;
-    private Scanner     scanner;
+    private final LibraryService service;
+    private final MemberView     memberView;
+    private final Scanner        scanner;
 
-    public MemberController(Librarian librarian, Scanner scanner) {
-        this.librarian  = librarian;
+    public MemberController(LibraryService service, Scanner scanner) {
+        this.service    = service;
         this.memberView = new MemberView();
         this.scanner    = scanner;
     }
@@ -47,7 +45,7 @@ public class MemberController {
             return;
         }
         try {
-            Member member = librarian.registerMember(id, name);
+            Member member = service.registerMember(id, name);
             if (member != null) memberView.showMemberRegistered(name);
             else memberView.showError("Could not register member (duplicate ID or member list full).");
         } catch (RuntimeException e) {
@@ -56,10 +54,6 @@ public class MemberController {
     }
 
     private void viewAllMembers() {
-        List<Member> members = new ArrayList<>();
-        for (int i = 0; i < librarian.getMemberCount(); i++) {
-            members.add(librarian.getMembers()[i]);
-        }
-        memberView.showAllMembers(members);                      // View
+        memberView.showAllMembers(service.getMembers());
     }
 }

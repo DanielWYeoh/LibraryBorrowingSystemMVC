@@ -44,23 +44,6 @@ public class Member extends Person {
         return false;
     }
 
-    public java.util.List<LibraryItem> searchItem(LibraryItem[] catalog, int catalogSize, String keyword) {
-        java.util.List<LibraryItem> results = new java.util.ArrayList<>();
-        for (int i = 0; i < catalogSize; i++)
-            if (catalog[i] != null
-                    && catalog[i].getTitle().toLowerCase().contains(keyword.toLowerCase()))
-                results.add(catalog[i]);
-        return results;
-    }
-
-    public java.util.List<LibraryItem> searchItem(LibraryItem[] catalog, int catalogSize) {
-        java.util.List<LibraryItem> results = new java.util.ArrayList<>();
-        for (int i = 0; i < catalogSize; i++)
-            if (catalog[i] != null && catalog[i].isAvailable())
-                results.add(catalog[i]);
-        return results;
-    }
-
     @Override
     public String getInfo() {
         return "Member[" + id + "] " + name + " (borrowing: " + borrowCount + " item(s))";
