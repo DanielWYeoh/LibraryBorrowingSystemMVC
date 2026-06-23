@@ -190,6 +190,8 @@ This has two sub-tabs:
 - **Hierarchy** — shows the tree structure of everything on the canvas
 - **Controller** — where you type the controller class name
 
+> **Important:** When you open an Empty document, the **Controller class** field in the Controller tab is **grayed out and disabled**. It only becomes active after you place the first (root) component onto the canvas. Always drag your root container (AnchorPane or VBox) onto the "Drag Library items here..." drop zone **before** trying to type the controller class name.
+
 ### Right panel — Inspector (3 tabs)
 Select any component on the canvas, then use these tabs:
 - **Properties** tab — sets visible text like `text`, `promptText`, `orientation`
@@ -207,31 +209,36 @@ Select any component on the canvas, then use these tabs:
 ### Step 6 — Open SceneBuilder and create a new empty document
 
 1. Open SceneBuilder (double-click the application icon, or find it in your Applications / Start Menu)
-2. When SceneBuilder opens, you will see a **welcome screen** or it may open an empty canvas directly
-3. Go to the top menu: **File → New**
-4. A dialog appears asking you to choose a template. Select **Empty** (do NOT choose Phone, Basic Application, or any other template)
-5. Click **OK** — you will see a completely blank canvas in the center
+2. Go to the top menu: **File → New**
+3. A dialog appears asking you to choose a template. Select **Empty** (do NOT choose Phone, Basic Application, or any other template)
+4. Click **OK**
 
-### Step 7 — Set the controller class
+After clicking OK you will see this state:
+- The center canvas shows a dotted rectangle with the text **"Drag Library items here..."**
+- The **Document → Controller** section (bottom-left) is visible but the **Controller class** field is **grayed out and cannot be typed into yet**
 
-Before placing any components, tell SceneBuilder which Java class will control this screen:
+> **Important:** The Controller class field is disabled until a root element exists on the canvas. You must place AnchorPane first — that unlocks the field.
 
-1. Look at the **bottom-left** of the SceneBuilder window — this is the **Document** panel
-2. Inside the Document panel, click the **Controller** sub-tab (it appears as a small tab at the bottom of that panel)
-3. You will see a field labeled **Controller class**
-4. Click inside that field and type exactly:
+### Step 7 — Add the root AnchorPane (this unlocks the Controller field)
+
+1. In the **left panel**, look at the **Library** section (top half)
+2. Find the **Containers** category — click the triangle next to it to expand if it is collapsed
+3. Find **AnchorPane** in the list
+4. **Drag AnchorPane** from the Library panel and **drop it directly onto the dotted "Drag Library items here..." area** in the center canvas
+5. AnchorPane will fill the canvas and appear in the **Document → Hierarchy** tab (bottom-left)
+6. The **Controller class** field in the **Document → Controller** tab is now **enabled** (no longer grayed out)
+
+### Step 8 — Set the controller class
+
+Now that AnchorPane is placed, you can type the controller name:
+
+1. Look at the **bottom-left Document panel** — click the **Controller** sub-tab
+2. Click inside the **Controller class** field (it is now active)
+3. Type exactly:
    ```
    com.fad.LibrarySystem.controller.BookFXController
    ```
-5. Press `Enter` to confirm
-
-### Step 8 — Add the root AnchorPane
-
-1. In the **left panel**, look at the **Library** section (top half)
-2. Find the **Containers** category — click it to expand if it is collapsed
-3. Find **AnchorPane** in the list
-4. **Drag** AnchorPane onto the center canvas and **drop** it — it will become the root container and fill the canvas area
-5. You will now see `AnchorPane` appear in the **Document → Hierarchy** tab (bottom-left)
+4. Press `Enter` to confirm
 
 ### Step 9 — Add a VBox inside the AnchorPane
 
@@ -381,22 +388,26 @@ SceneBuilder can generate a Java skeleton with all the `@FXML` annotations alrea
 
 1. In SceneBuilder, go to the top menu: **File → New**
 2. In the template dialog, select **Empty** (not any other template)
-3. Click **OK** — the canvas clears and becomes blank
+3. Click **OK** — the canvas shows the dotted **"Drag Library items here..."** area and the Controller class field is grayed out
 
-### Step 20 — Set the controller class
+### Step 20 — Add the root AnchorPane first (unlocks the Controller field)
 
-1. In the **bottom-left Document panel**, click the **Controller** sub-tab
-2. In the **Controller class** field, type exactly:
+1. **Library** panel (left) → **Containers** category → find **AnchorPane**
+2. **Drag AnchorPane** and **drop it onto the dotted "Drag Library items here..." area** in the center canvas
+3. AnchorPane becomes the root — the **Controller class** field is now enabled
+
+### Step 21 — Set the controller class
+
+1. **Bottom-left Document panel** → click the **Controller** sub-tab
+2. Click inside the **Controller class** field and type exactly:
    ```
    com.fad.LibrarySystem.controller.MemberFXController
    ```
 3. Press `Enter`
 
-### Step 21 — Build the layout
+### Step 22 — Build the layout
 
-**Add AnchorPane (root):**
-1. **Library** panel (left) → **Containers** category → find **AnchorPane**
-2. Drag and drop **AnchorPane** onto the center canvas — it becomes the root
+**AnchorPane is already placed as the root from Step 20.**
 
 **Add VBox inside AnchorPane:**
 1. **Library** panel → **Containers** → find **VBox**
@@ -468,20 +479,26 @@ Column 2 — Name:
 
 1. Top menu → **File → New**
 2. In the template dialog, select **Empty** → click **OK**
+3. The canvas shows the dotted **"Drag Library items here..."** area and the Controller class field is grayed out
 
-### Step 24 — Set the controller class
+### Step 24 — Add the root AnchorPane first (unlocks the Controller field)
+
+1. **Library** panel → **Containers** → find **AnchorPane**
+2. **Drag AnchorPane** and **drop it onto the dotted "Drag Library items here..." area** in the center canvas
+3. The **Controller class** field is now enabled
+
+### Step 25 — Set the controller class
 
 1. **Bottom-left Document panel** → **Controller** sub-tab
-2. **Controller class** field → type exactly:
+2. Click inside the **Controller class** field and type exactly:
    ```
    com.fad.LibrarySystem.controller.BorrowFXController
    ```
 3. Press `Enter`
 
-### Step 25 — Build the layout
+### Step 26 — Build the layout
 
-**Add AnchorPane (root):**
-1. **Library** panel → **Containers** → **AnchorPane** → drag onto canvas
+**AnchorPane is already placed as the root from Step 24.**
 
 **Add VBox inside AnchorPane:**
 1. **Library** panel → **Containers** → **VBox** → drag onto **AnchorPane**
@@ -591,26 +608,32 @@ Column 6 — Status:
 
 1. Top menu → **File → New**
 2. In the template dialog, select **Empty** → click **OK**
+3. The canvas shows the dotted **"Drag Library items here..."** area and the Controller class field is grayed out
 
-### Step 28 — Set the controller class
+### Step 28 — Add the root VBox (this tab uses VBox as the root, not AnchorPane)
+
+This tab is simpler — the root is a VBox directly, with no AnchorPane wrapper needed.
+
+1. **Library** panel → **Containers** → find **VBox**
+2. **Drag VBox** and **drop it onto the dotted "Drag Library items here..." area** in the center canvas
+3. VBox becomes the root — the **Controller class** field is now enabled
+4. Click **VBox** to select it
+5. **Right panel → Layout** tab:
+   - **Pref Width** field → type: `980`
+   - **Pref Height** field → type: `600`
+
+### Step 29 — Set the controller class
 
 1. **Bottom-left Document panel** → **Controller** sub-tab
-2. **Controller class** field → type exactly:
+2. Click inside the **Controller class** field and type exactly:
    ```
    com.fad.LibrarySystem.controller.FineFXController
    ```
 3. Press `Enter`
 
-### Step 29 — Build the layout
+### Step 30 — Build the layout
 
-This tab uses a VBox directly as the root (no AnchorPane needed):
-
-**Add VBox as the root:**
-1. **Library** panel → **Containers** → **VBox** → drag onto the center canvas
-2. Click **VBox** to select it
-3. **Right panel → Layout** tab:
-   - **Pref Width** field → type: `980`
-   - **Pref Height** field → type: `600`
+**VBox is already placed as the root from Step 28.**
 
 **Add TableView inside VBox:**
 1. **Library** panel → **Controls** → **TableView** → drag onto **VBox**
@@ -1190,14 +1213,17 @@ The controller class name you typed in SceneBuilder's **Document → Controller*
 ```
 For each new screen:
   1. SceneBuilder → File → New → choose Empty (not any template) → OK
-  2. Bottom-left Document panel → Controller tab → type the full class name
-  3. Library panel (left) → drag Containers (VBox, HBox, AnchorPane) onto canvas
-  4. Library panel (left) → drag Controls (TableView, TextField, Button, Label) into containers
-  5. For each control you need in Java → select it → right Inspector panel → Code tab → set fx:id
-  6. For each button → right Inspector panel → Code tab → set On Action (e.g. #handleAddBook)
-  7. For each column text and size → right Inspector panel → Properties tab → Text and Pref Width
-  8. For AnchorPane constraints and VBox vgrow → right Inspector panel → Layout tab
-  9. Top menu → View → Show Sample Controller Skeleton → Copy to Clipboard
- 10. Top menu → File → Save As → navigate to src/resources/com/fad/LibrarySystem/view/ → save as XxxTab.fxml
- 11. In VS Code → create XxxFXController.java → paste skeleton → implement the handler methods
+     Canvas shows dotted "Drag Library items here..." — Controller field is grayed out
+  2. Library panel (left) → drag the ROOT container (AnchorPane or VBox) onto the dotted drop zone
+     This is the FIRST drag. It unlocks the Controller class field.
+  3. Bottom-left Document panel → Controller tab → click Controller class field → type full class name → Enter
+  4. Library panel (left) → drag inner Containers (VBox, HBox) into the root container
+  5. Library panel (left) → drag Controls (TableView, TextField, Button, Label) into their containers
+  6. For each control you need in Java → select it → right Inspector panel → Code tab → set fx:id → Enter
+  7. For each button → right Inspector panel → Code tab → set On Action (e.g. #handleAddBook) → Enter
+  8. For each column text and size → right Inspector panel → Properties tab → Text and Pref Width
+  9. For AnchorPane constraints and VBox vgrow → right Inspector panel → Layout tab
+ 10. Top menu → View → Show Sample Controller Skeleton → Copy to Clipboard
+ 11. Top menu → File → Save As → navigate to src/resources/com/fad/LibrarySystem/view/ → save as XxxTab.fxml
+ 12. In VS Code → create XxxFXController.java → paste skeleton → implement the handler methods
 ```
