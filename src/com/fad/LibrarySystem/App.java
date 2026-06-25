@@ -10,6 +10,7 @@
 package com.fad.LibrarySystem;
 
 import com.fad.LibrarySystem.controller.BookFXController;
+import com.fad.LibrarySystem.controller.MemberFXController;
 import com.fad.LibrarySystem.database.DatabaseManager;
 import com.fad.LibrarySystem.model.LibraryService;
 import javafx.application.Application;
@@ -39,7 +40,8 @@ import javafx.stage.Stage;
  * Run with: mvn javafx:run
  *
  * Tabs implemented so far:
- *   - Books (BookFXController + BookTab.fxml)
+ *   - Books   (BookFXController   + BookTab.fxml)
+ *   - Members (MemberFXController + MemberTab.fxml)
  */
 public class App extends Application {
 
@@ -58,7 +60,8 @@ public class App extends Application {
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
         tabPane.getTabs().add(loadBookTab());
-        // Add MemberTab, BorrowTab, FineTab here as each controller is built
+        tabPane.getTabs().add(loadMemberTab());
+        // Add BorrowTab, FineTab here as each controller is built
 
         stage.setScene(new Scene(tabPane, 1000, 650));
         stage.setTitle("Library Borrowing System");
@@ -76,6 +79,20 @@ public class App extends Application {
             getClass().getResource("/com/fad/LibrarySystem/view/BookTab.fxml"));
         Tab tab = new Tab("Books", loader.load());
         loader.<BookFXController>getController().setService(service);
+        return tab;
+    }
+
+    /**
+     * Loads MemberTab.fxml, retrieves the MemberFXController, injects the service,
+     * and wraps the result in a Tab labelled "Members".
+     *
+     * @return the fully wired Members tab
+     */
+    private Tab loadMemberTab() throws Exception {
+        FXMLLoader loader = new FXMLLoader(
+            getClass().getResource("/com/fad/LibrarySystem/view/MemberTab.fxml"));
+        Tab tab = new Tab("Members", loader.load());
+        loader.<MemberFXController>getController().setService(service);
         return tab;
     }
 

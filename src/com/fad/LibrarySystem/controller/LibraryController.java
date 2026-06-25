@@ -18,13 +18,16 @@ import java.util.Scanner;
  *
  * LibraryController is created by Main.java and owns the main menu loop.
  * It creates one LibraryService (the shared data/business layer) and the
- * sub-controllers for Members and Borrow/Return, then delegates to them
- * based on the user's menu choice.
+ * BorrowController sub-controller, then delegates to it based on the user's choice.
  *
- * Note on Books (option 1):
- *   The Books tab has been migrated to JavaFX (BookFXController + BookTab.fxml).
- *   Selecting option 1 in the console now shows a redirect message pointing to
- *   the GUI. Once all tabs are migrated, this class and Main.java will be retired.
+ * Migration status:
+ *   - Books (option 1)   → migrated to BookFXController   + BookTab.fxml
+ *   - Members (option 2) → migrated to MemberFXController + MemberTab.fxml
+ *   - Borrow (option 3)  → still active in the console (BorrowController)
+ *   - Reservations (4)   → coming soon
+ *   - Fines (5)          → coming soon
+ *
+ * Once all tabs are migrated, this class and Main.java will be retired.
  *
  * Used by: Main (console entry point)
  * MVC role: Top-level Controller
@@ -33,7 +36,6 @@ public class LibraryController {
 
     private final LibraryService   service;
     private final MenuView         menuView;
-    private final MemberController memberController;
     private final BorrowController borrowController;
     private final Scanner          scanner;
 
@@ -41,7 +43,6 @@ public class LibraryController {
         this.service          = new LibraryService();
         this.menuView         = new MenuView();
         this.scanner          = new Scanner(System.in);
-        this.memberController = new MemberController(service, scanner);
         this.borrowController = new BorrowController(service, scanner);
     }
 
@@ -58,7 +59,7 @@ public class LibraryController {
             }
             switch (choice) {
                 case 1  -> menuView.showMessage("Books — use the JavaFX GUI (run App.java).");
-                case 2  -> memberController.handleMenu();
+                case 2  -> menuView.showMessage("Members — use the JavaFX GUI (run App.java).");
                 case 3  -> borrowController.handleMenu();
                 case 4  -> menuView.showMessage("Reservations — coming soon.");
                 case 5  -> menuView.showMessage("Fines — coming soon.");
