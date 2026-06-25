@@ -1,42 +1,22 @@
+/**
+ * @author      masjohncook
+ * @version     0.0.1
+ * @copyright   (C) Copyright 2026
+ * @license     None
+ * @maintainer  masjohncook
+ * @email       mas.john.cook@gmail.com
+ * @status      Deprecated
+ */
 package com.fad.LibrarySystem.view;
 
-import com.fad.LibrarySystem.model.Member;
-import java.util.List;
-
-public class MemberView {
-
-    public void showMember(Member member) {
-        System.out.println(member.getInfo());
-    }
-
-    public void showAllMembers(List<Member> members) {
-        if (members.isEmpty()) {
-            System.out.println("No members registered.");
-            return;
-        }
-        System.out.println("----- Members -----");
-        for (int i = 0; i < members.size(); i++) {
-            System.out.println((i + 1) + ". " + members.get(i).getInfo());
-        }
-    }
-
-    public void showMemberRegistered(String name) {
-        System.out.println("Member registered: " + name);
-    }
-
-    public void showMemberNotFound() {
-        System.out.println("Member not found.");
-    }
-
-    public void showError(String message) {
-        System.out.println("[ERROR] " + message);
-    }
-
-    public void showMemberMenu() {
-        System.out.println("\n--- Member Menu ---");
-        System.out.println("1. Register Member");
-        System.out.println("2. View All Members");
-        System.out.println("0. Back");
-        System.out.print("Choose: ");
-    }
-}
+/**
+ * Deprecated console view for member operations.
+ *
+ * This class was part of the original console-based MVC implementation
+ * and printed member data directly to System.out. It has been replaced by
+ * the JavaFX implementation: {@code MemberFXController} + {@code MemberTab.fxml}.
+ *
+ * @deprecated Replaced by MemberFXController and MemberTab.fxml.
+ */
+@Deprecated
+public class MemberView {}

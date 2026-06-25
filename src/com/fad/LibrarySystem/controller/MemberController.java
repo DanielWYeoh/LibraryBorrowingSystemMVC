@@ -1,65 +1,22 @@
+/**
+ * @author      masjohncook
+ * @version     0.0.1
+ * @copyright   (C) Copyright 2026
+ * @license     None
+ * @maintainer  masjohncook
+ * @email       mas.john.cook@gmail.com
+ * @status      Deprecated
+ */
 package com.fad.LibrarySystem.controller;
 
-import com.fad.LibrarySystem.model.Member;
-import com.fad.LibrarySystem.model.Librarian;
-import com.fad.LibrarySystem.view.MemberView;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
-public class MemberController {
-
-    private Librarian   librarian;
-    private MemberView  memberView;
-    private Scanner     scanner;
-
-    public MemberController(Librarian librarian, Scanner scanner) {
-        this.librarian  = librarian;
-        this.memberView = new MemberView();
-        this.scanner    = scanner;
-    }
-
-    public void handleMenu() {
-        int choice = -1;
-        while (choice != 0) {
-            memberView.showMemberMenu();
-            try {
-                choice = Integer.parseInt(scanner.nextLine().trim());
-            } catch (NumberFormatException e) {
-                memberView.showError("Please enter a valid number.");
-                continue;
-            }
-            switch (choice) {
-                case 1  -> registerMember();
-                case 2  -> viewAllMembers();
-                case 0  -> { return; }
-                default -> memberView.showError("Invalid option. Please try again.");
-            }
-        }
-    }
-
-    private void registerMember() {
-        System.out.print("Member ID : "); String id   = scanner.nextLine().trim();
-        System.out.print("Name      : "); String name = scanner.nextLine().trim();
-
-        if (id.isEmpty() || name.isEmpty()) {
-            memberView.showError("Member ID and Name cannot be empty.");
-            return;
-        }
-        try {
-            Member member = librarian.registerMember(id, name);
-            if (member != null) memberView.showMemberRegistered(name);
-            else memberView.showError("Could not register member (duplicate ID or member list full).");
-        } catch (RuntimeException e) {
-            memberView.showError("Could not save member: " + e.getMessage());
-        }
-    }
-
-    private void viewAllMembers() {
-        List<Member> members = new ArrayList<>();
-        for (int i = 0; i < librarian.getMemberCount(); i++) {
-            members.add(librarian.getMembers()[i]);
-        }
-        memberView.showAllMembers(members);                      // View
-    }
-}
+/**
+ * Deprecated console controller for member management.
+ *
+ * This class was part of the original console-based MVC implementation
+ * and handled the Members sub-menu (register, view). It has been replaced
+ * by the JavaFX implementation: {@code MemberFXController} + {@code MemberTab.fxml}.
+ *
+ * @deprecated Replaced by MemberFXController and MemberTab.fxml.
+ */
+@Deprecated
+public class MemberController {}

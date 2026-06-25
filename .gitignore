@@ -38,5 +38,6 @@ nbbuild/
 
 # ── SQLite database ───────────────────────────────────────────
 *.db
+!library.db
 *.db-shm
 *.db-wal

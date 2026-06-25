@@ -1,76 +1,22 @@
+/**
+ * @author      masjohncook
+ * @version     0.0.1
+ * @copyright   (C) Copyright 2026
+ * @license     None
+ * @maintainer  masjohncook
+ * @email       mas.john.cook@gmail.com
+ * @status      Deprecated
+ */
 package com.fad.LibrarySystem.controller;
 
-import com.fad.LibrarySystem.model.Books;
-import com.fad.LibrarySystem.model.Librarian;
-import com.fad.LibrarySystem.view.BookView;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
-public class BookController {
-
-    private Librarian librarian;
-    private BookView  bookView;
-    private Scanner   scanner;
-
-    public BookController(Librarian librarian, Scanner scanner) {
-        this.librarian = librarian;
-        this.bookView  = new BookView();
-        this.scanner   = scanner;
-    }
-
-    public void handleMenu() {
-        int choice = -1;
-        while (choice != 0) {
-            bookView.showBookMenu();
-            try {
-                choice = Integer.parseInt(scanner.nextLine().trim());
-            } catch (NumberFormatException e) {
-                bookView.showError("Please enter a valid number.");
-                continue;
-            }
-            switch (choice) {
-                case 1  -> addBook();
-                case 2  -> viewAllBooks();
-                case 3  -> searchByGenre();
-                case 0  -> { return; }
-                default -> bookView.showError("Invalid option. Please try again.");
-            }
-        }
-    }
-
-    private void addBook() {
-        System.out.print("Book ID : "); String id     = scanner.nextLine().trim();
-        System.out.print("Title   : "); String title  = scanner.nextLine().trim();
-        System.out.print("Author  : "); String author = scanner.nextLine().trim();
-        System.out.print("Genre   : "); String genre  = scanner.nextLine().trim();
-
-        if (id.isEmpty() || title.isEmpty() || author.isEmpty()) {
-            bookView.showError("Book ID, Title, and Author cannot be empty.");
-            return;
-        }
-        try {
-            Books book = librarian.addBook(id, title, author, genre.isEmpty() ? "General" : genre);
-            if (book != null) bookView.showBookAdded(title);
-            else bookView.showError("Failed to add book (duplicate ID or catalog full).");
-        } catch (RuntimeException e) {
-            bookView.showError("Could not save book: " + e.getMessage());
-        }
-    }
-
-    private void viewAllBooks() {
-        List<Books> books = new ArrayList<>();
-        for (int i = 0; i < librarian.getCatalogSize(); i++) {
-            books.add(librarian.getCatalog()[i]);
-        }
-        bookView.showAllBooks(books);                               // View
-    }
-
-    private void searchByGenre() {
-        System.out.print("Enter genre: ");
-        String genre = scanner.nextLine();
-        List<Books> results = librarian.searchByGenre(                        // Model
-                librarian.getCatalog(), librarian.getCatalogSize(), genre);
-        bookView.showGenreResults(results, genre);                            // View
-    }
-}
+/**
+ * Deprecated console controller for book management.
+ *
+ * This class was part of the original console-based MVC implementation
+ * and handled the Books sub-menu (add, view, search). It has been replaced
+ * by the JavaFX implementation: {@code BookFXController} + {@code BookTab.fxml}.
+ *
+ * @deprecated Replaced by BookFXController and BookTab.fxml.
+ */
+@Deprecated
+public class BookController {}

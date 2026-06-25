@@ -1,41 +1,31 @@
+/**
+ * @author      masjohncook
+ * @version     0.0.1
+ * @copyright   (C) Copyright 2026
+ * @license     None
+ * @maintainer  masjohncook
+ * @email       mas.john.cook@gmail.com
+ * @status      Deprecated
+ */
 package com.fad.LibrarySystem.model;
 
-public class Books extends LibraryItem {
-
-    private String author;
-    private String genre;
+/**
+ * Deprecated compatibility alias for {@link Book}.
+ *
+ * This class existed in an earlier version of the project where the class
+ * representing a single book was incorrectly named in the plural form.
+ * It has been replaced by {@link Book} (singular), which follows standard
+ * Java naming conventions where a class represents one instance of a concept.
+ *
+ * This stub is kept only to avoid breaking any external references that
+ * may still use the old name. All new code must use {@link Book} instead.
+ *
+ * @deprecated Use {@link Book} instead.
+ */
+@Deprecated
+public class Books extends Book {
 
     public Books(String bookId, String title, String author, String genre) {
-        super(bookId, title);
-        this.author = author;
-        this.genre  = genre;
+        super(bookId, title, author, genre);
     }
-
-    public static Books[] getInitialBooks() {
-        Books[] initial = new Books[5];
-        initial[0] = new Books("B001", "The Great Gatsby",       "F. Scott Fitzgerald", "Classic");
-        initial[1] = new Books("B002", "To Kill a Mockingbird",  "Harper Lee",          "Fiction");
-        initial[2] = new Books("B003", "1984",                   "George Orwell",       "Dystopian");
-        initial[3] = new Books("B004", "Brave New World",        "Aldous Huxley",       "Sci-Fi");
-        initial[4] = new Books("B005", "The Catcher in the Rye", "J.D. Salinger",       "Fiction");
-        return initial;
-    }
-
-    @Override
-    public String getInfo() {
-        String status = available ? "Available" : "Borrowed";
-        return "[" + itemId + "] \"" + title + "\" by " + author
-                + " | Genre: " + genre + " (" + status + ")";
-    }
-
-    @Override
-    public String toString() { return getInfo(); }
-
-    public String getBookId() { return itemId; }
-    public String getAuthor() { return author; }
-    public String getGenre()  { return genre; }
-
-    public void setBookId(String bookId) { this.itemId = bookId; }
-    public void setAuthor(String author) { this.author = author; }
-    public void setGenre(String genre)   { this.genre  = genre; }
 }
